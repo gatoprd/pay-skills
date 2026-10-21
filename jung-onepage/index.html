@@ -1,360 +1,214 @@
 <!doctype html>
 <html lang="el">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#090b0a">
-  <meta name="description" content="ΕΝΔΟ — ένα διαδραστικό παρατηρητήριο σκιάς, ονείρων και εσωτερικών αντιθέσεων. Εμπνευσμένο από την αναλυτική ψυχολογία του Carl Jung.">
-  <title>ΕΝΔΟ — Ένα δωμάτιο που σκέφτεται μαζί σου</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Noto+Serif:wght@400;500;600&display=swap" rel="stylesheet">
-  <style>
-    :root{color-scheme:dark;--paper:#eae9e0;--muted:#969f98;--accent:#c3ef9d;--base:#090b0a;--card:#111512;--border:#343b33;--serif:"Noto Serif",Georgia,serif;--mono:"DM Mono",monospace;--sans:"Manrope",Arial,sans-serif}
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{margin:0;background:var(--base);color:var(--paper);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
-    body::before{content:"";position:fixed;inset:0;z-index:20;pointer-events:none;opacity:.07;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 150 150' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.88' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.50'/%3E%3C/svg%3E")}
-    ::selection{background:var(--accent);color:#080a08}
-    a{color:inherit;text-decoration:none}
-    button,textarea,input{font:inherit}
-    button{cursor:pointer}
-    button:focus-visible,a:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
-    .frame{width:min(1500px,calc(100% - 112px));margin-inline:auto}
-    .mono{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase}
-    .muted{color:var(--muted)}
-    .line{height:1px;background:var(--border)}
-    header{position:relative;z-index:10;border-bottom:1px solid var(--border)}
-    .topbar{height:78px;display:flex;align-items:center;justify-content:space-between;gap:24px}
-    .brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.26em;font-size:18px}
-    .brand-icon{width:30px;height:30px;border:1px solid var(--accent);border-radius:50%;display:grid;place-items:center;color:var(--accent);font-family:var(--serif);font-size:20px;font-weight:400;transform:rotate(-20deg)}
-    .nav-right{display:flex;align-items:center;gap:42px}
-    .status{color:var(--accent);display:flex;align-items:center;gap:10px}
-    .status-dot{width:6px;height:6px;background:var(--accent);border-radius:100%;box-shadow:0 0 18px var(--accent);animation:blink 2.8s ease infinite}
-    @keyframes blink{50%{opacity:.25}}
-    .navlink{color:var(--muted);transition:color .2s}
-    .navlink:hover{color:var(--paper)}
-    .hero{min-height:695px;display:grid;grid-template-columns:1fr 1fr;position:relative;border-bottom:1px solid var(--border)}
-    .hero-copy{padding:72px 45px 50px 0;display:flex;flex-direction:column;justify-content:space-between;position:relative;z-index:2}
-    .hero-kicker{display:flex;align-items:center;gap:17px;color:var(--accent)}
-    .hero-kicker .rule{height:1px;width:47px;background:var(--accent)}
-    h1{font-family:var(--serif);font-weight:400;font-size:clamp(68px,7vw,123px);line-height:1.07;letter-spacing:-.075em;margin:36px 0 28px}
-    h1 .ghost{color:transparent;-webkit-text-stroke:1px #a3ada1}
-    h1 .indent{padding-left:clamp(15px,5vw,86px);display:inline-block;font-style:italic;color:var(--accent)}
-    .hero-desc{font-size:15px;line-height:2;max-width:460px;color:#b9c0b7;margin:0}
-    .hero-bottom{display:flex;justify-content:space-between;align-items:end;gap:20px}
-    .hero-index{display:flex;gap:13px;align-items:baseline}
-    .hero-index b{font-family:var(--serif);font-size:38px;font-weight:400}
-    .hero-index span{color:var(--muted)}
-    .scroll-label{display:flex;gap:14px;align-items:center;color:var(--muted)}
-    .arrow-down{font-size:30px;font-weight:200;line-height:1;color:var(--accent)}
-    .sphere-stage{position:relative;border-left:1px solid var(--border);min-height:695px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 48%,rgba(136,167,116,.08),transparent 49%)}
-    .sphere-stage::before{content:"";position:absolute;inset:40px;border:1px solid rgba(183,212,170,.09);border-radius:50%;transform:scale(.85)}
-    #psyche{display:block;width:100%;height:100%;position:absolute;inset:0}
-    .sphere-title{position:absolute;top:34px;left:35px;color:#8f9b90}
-    .sphere-coord{position:absolute;right:34px;top:34px;color:#8f9b90;text-align:right}
-    .sphere-bottom{position:absolute;bottom:32px;left:35px;right:35px;display:flex;justify-content:space-between;align-items:end;gap:20px}
-    .sphere-bottom .hint{color:var(--accent);max-width:190px;line-height:1.9}
-    .sphere-bottom .measure{color:var(--muted);line-height:1.9;text-align:right}
-    .marker{position:absolute;width:20px;height:20px;border:1px solid #7c957a;border-radius:50%;top:50%;left:50%;pointer-events:none;opacity:.4}
-    .section{padding:103px 0 90px}
-    .section-intro{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-bottom:43px;align-items:end}
-    .section-tag{color:var(--accent);display:flex;gap:13px;align-items:center}
-    .section-tag::before{content:"";width:17px;height:1px;background:var(--accent)}
-    h2{font-family:var(--serif);font-size:clamp(36px,4.8vw,65px);font-weight:400;letter-spacing:-.06em;line-height:1.2;margin:20px 0 0}
-    .intro-aside{max-width:420px;justify-self:end;font-size:14px;color:var(--muted);line-height:1.95}
-    .modes{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border:1px solid var(--border)}
-    .mode{border:0;border-right:1px solid var(--border);background:#101310;min-height:140px;color:var(--muted);text-align:left;padding:22px 22px;transition:background .25s,color .25s;display:flex;flex-direction:column;justify-content:space-between;gap:28px}
-    .mode:last-child{border-right:0}
-    .mode.active{background:var(--accent);color:#0c130b}
-    .mode:hover:not(.active){background:#1d241c;color:var(--paper)}
-    .mode-label{font-family:var(--serif);font-size:27px;letter-spacing:-.04em;color:var(--paper)}
-    .mode.active .mode-label{color:#0c130b}
-    .mode-no{font-size:10px;letter-spacing:.12em}
-    .organism{margin-top:20px;border:1px solid var(--border);display:grid;grid-template-columns:1.6fr .65fr;min-height:475px}
-    .reading{padding:46px 50px 46px;display:flex;flex-direction:column;justify-content:space-between;gap:28px}
-    .reading-top{display:flex;justify-content:space-between;gap:20px;color:var(--accent)}
-    .thought{font-family:var(--serif);font-weight:400;font-size:clamp(28px,3.6vw,49px);line-height:1.52;letter-spacing:-.035em;max-width:850px;transition:opacity .5s,transform .5s;margin:22px 0}
-    .thought.fade{opacity:.03;transform:translateY(10px)}
-    .thought-tail{font-size:14px;color:#abb5a9;line-height:1.9;max-width:640px}
-    .reading-end{display:flex;align-items:center;justify-content:space-between;gap:20px}
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:15px;min-height:47px;padding:13px 18px;border:1px solid #596354;background:transparent;color:var(--paper);font-size:12px;letter-spacing:.04em;transition:background .2s,border-color .2s,color .2s}
-    .btn:hover{border-color:var(--accent);color:var(--accent)}
-    .btn.primary{background:var(--accent);border-color:var(--accent);color:#0d140c}
-    .btn.primary:hover{background:#e4facf}
-    .side-metrics{border-left:1px solid var(--border);background:#101410;display:flex;flex-direction:column;padding:32px;gap:24px;justify-content:space-between}
-    .metrics-label{color:var(--muted)}
-    .metrics-time{font-family:var(--serif);font-size:57px;letter-spacing:-.075em;line-height:1}
-    .metrics-phase{color:var(--accent);font-family:var(--serif);font-size:24px;line-height:1.5}
-    .metric-foot{display:grid;gap:18px}
-    .slider-box{display:flex;align-items:center;justify-content:space-between;gap:10px}
-    input[type=range]{accent-color:var(--accent);width:100%;height:4px}
-    .track{display:flex;justify-content:space-between;color:#748072;margin-top:8px}
-    .trace{border-top:1px solid var(--border);padding-top:24px;min-height:90px}
-    .trace p{font-size:12px;line-height:1.8;color:#a5b0a4;margin:12px 0 0}
-    .dream-section{border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:95px 0 100px}
-    .dream-layout{display:grid;grid-template-columns:1fr .9fr;gap:80px}
-    .feed-title{margin:24px 0 26px;font-family:var(--serif);font-size:45px;font-weight:400;letter-spacing:-.05em}
-    .feed{display:flex;flex-direction:column}
-    .fragment{padding:24px 0;border-top:1px solid var(--border);display:grid;grid-template-columns:80px 1fr;gap:18px;animation:appear .6s ease both}
-    @keyframes appear{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-    .frag-no{color:var(--accent);margin-top:8px}
-    .fragment p{font-family:var(--serif);font-size:clamp(18px,2vw,24px);letter-spacing:-.025em;line-height:1.72;margin:0}
-    .vault{border:1px solid #455145;padding:35px;align-self:start;background:linear-gradient(145deg,#161c16,#0d110e)}
-    .vault .privacy{color:var(--accent)}
-    .vault h3{font-family:var(--serif);font-weight:400;font-size:38px;letter-spacing:-.05em;margin:35px 0 14px}
-    .vault-desc{color:var(--muted);font-size:13px;line-height:1.95;margin-bottom:26px}
-    textarea{display:block;width:100%;min-height:135px;background:rgba(2,7,3,.38);color:var(--paper);border:1px solid #465346;resize:vertical;padding:17px;line-height:1.7;font-size:14px}
-    textarea::placeholder{color:#718174}
-    .vault-row{display:flex;flex-wrap:wrap;gap:11px;align-items:center;justify-content:space-between;margin-top:13px}
-    .vault-feedback{min-height:50px;margin-top:22px;padding-top:18px;border-top:1px solid #39483a;color:#bdc8ba;line-height:1.7;font-family:var(--serif);font-size:16px}
-    .vault-tools{display:flex;justify-content:space-between;gap:12px;margin-top:20px;color:var(--muted)}
-    .subtle{border:0;background:transparent;color:var(--muted);padding:0;text-decoration:underline;text-underline-offset:5px;font-size:11px}
-    .subtle:hover{color:var(--accent)}
-    .archive{padding:90px 0 110px}
-    .archive-head{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:36px}
-    .archive-title{max-width:720px}
-    .archive-list{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-    .archive-card{min-height:310px;border:1px solid var(--border);background:#101411;display:flex;flex-direction:column;justify-content:space-between;padding:27px;position:relative;overflow:hidden;transition:border-color .3s,background .3s;cursor:pointer;text-align:left;color:var(--paper)}
-    .archive-card:hover,.archive-card:focus-visible{border-color:var(--accent);background:#182019}
-    .archive-card::before{content:"";position:absolute;right:-70px;top:35px;width:190px;height:190px;border:1px solid #354638;border-radius:50%;box-shadow:0 0 0 21px rgba(103,142,92,.025),0 0 0 52px rgba(103,142,92,.02)}
-    .archive-card:nth-child(2)::before{border-radius:2px;transform:rotate(37deg)}
-    .archive-card:nth-child(3)::before{width:160px;height:220px;border-radius:47% 53% 33% 67%;transform:rotate(31deg)}
-    .archive-card p{font-family:var(--serif);font-size:27px;line-height:1.5;letter-spacing:-.04em;margin:0;max-width:280px;position:relative}
-    .archive-card .mono{color:var(--accent);position:relative}
-    .archive-card .card-arrow{align-self:flex-end;font-size:25px;color:var(--accent);position:relative}
-    footer{border-top:1px solid var(--border);padding:30px 0 44px}
-    .foot{display:flex;justify-content:space-between;align-items:start;gap:30px}
-    .foot p{max-width:650px;color:#8b978a;font-size:11px;line-height:2;margin:0}
-    .foot-mark{font-family:var(--serif);font-size:42px;line-height:1;color:var(--accent)}
-    .noselect{-webkit-user-select:none;user-select:none}
-    @media(max-width:1100px){.frame{width:calc(100% - 66px)}.hero{min-height:610px}.hero-copy{padding:55px 22px 40px 0}.sphere-stage{min-height:610px}.reading{padding:38px 35px}.side-metrics{padding:24px}.dream-layout{gap:40px}}
-    @media(max-width:820px){.frame{width:calc(100% - 42px)}.topbar{height:68px}.nav-right{gap:15px}.navlink{display:none}.hero{grid-template-columns:1fr}.hero-copy{min-height:460px;padding:55px 0 30px}.hero h1{font-size:clamp(66px,12vw,108px)}.sphere-stage{height:560px;min-height:0;border-left:0;border-top:1px solid var(--border)}.modes{grid-template-columns:repeat(5,1fr)}.mode{padding:16px 10px;min-height:110px}.mode-label{font-size:20px}.organism{grid-template-columns:1fr}.side-metrics{border-left:0;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:25px}.metrics-time{font-size:48px}.trace{grid-column:1/-1}.dream-layout{grid-template-columns:1fr}.archive-list{grid-template-columns:1fr 1fr}.archive-card:last-child{grid-column:1/-1;min-height:240px}.section-intro{grid-template-columns:1fr}.intro-aside{justify-self:start}}
-    @media(max-width:550px){.frame{width:calc(100% - 30px)}.topbar .mono{font-size:9px}.nav-right .status{max-width:140px;line-height:1.6}.hero-copy{min-height:540px;padding-top:49px}.hero h1{font-size:clamp(58px,13.5vw,77px);margin:55px 0 28px}.hero .indent{padding-left:16px}.hero-desc{font-size:13px}.hero-index b{font-size:27px}.sphere-stage{height:430px}.sphere-title{left:18px;top:20px}.sphere-coord{right:18px;top:20px}.sphere-bottom{bottom:20px;left:18px;right:18px}.section,.dream-section,.archive{padding:69px 0}.section-intro{margin-bottom:29px}.modes{grid-template-columns:repeat(3,1fr)}.mode{border-bottom:1px solid var(--border);min-height:102px}.mode:nth-child(3){border-right:0}.mode:nth-child(n+4){border-bottom:0}.mode:nth-child(4){border-right:1px solid var(--border)}.reading{padding:30px 23px}.thought{font-size:29px;line-height:1.55}.reading-end{align-items:start;flex-wrap:wrap}.side-metrics{grid-template-columns:1fr}.trace{grid-column:auto}.vault{padding:25px}.vault h3{font-size:31px}.archive-head{align-items:start;flex-direction:column}.archive-list{grid-template-columns:1fr}.archive-card,.archive-card:last-child{min-height:235px;grid-column:auto}.archive-card p{font-size:24px}.foot{gap:20px}.foot-mark{font-size:29px}}
-    @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101316">
+<meta name="description" content="ΕΝΔΟ — ένα προσωπικό, ιδιωτικό και δυναμικό παρατηρητήριο της εσωτερικής ζωής. Διάλογος εμπνευσμένος από τον C. G. Jung, όνειρα, σκιά, αυτοπαρατήρηση.">
+<title>ΕΝΔΟ — Το ανεξερεύνητο μέσα σου</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Noto+Serif:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#101316;--surface:#191d21;--surface2:#20262a;--ink:#f0ede6;--quiet:#a6a8a2;--orange:#f2ad82;--border:#363d40;--serif:"Noto Serif",Georgia,serif;--sans:"Manrope",sans-serif;--mono:"DM Mono",monospace}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.65 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:9;opacity:.08;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.6' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+::selection{background:var(--orange);color:#101316}button,textarea,input{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible,textarea:focus-visible{outline:2px solid var(--orange);outline-offset:3px}a{color:inherit;text-decoration:none}
+.wrap{width:min(1440px,calc(100% - 112px));margin-inline:auto}.eyebrow{font:500 10px/1.7 var(--mono);letter-spacing:.145em;text-transform:uppercase;color:var(--quiet)}.warm{color:var(--orange)}.rule{height:1px;background:var(--border)}.pill{display:inline-block;border:1px solid var(--border);border-radius:100px;padding:7px 12px}
+.top{height:77px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:22px}.logomark{display:flex;align-items:center;gap:12px;font:600 19px var(--sans);letter-spacing:.2em}.sign{height:30px;width:30px;border:1px solid var(--orange);border-radius:50%;position:relative;display:block}.sign:before,.sign:after{content:"";position:absolute;top:6px;bottom:6px;left:14px;border-left:1px solid var(--orange);transform:rotate(38deg)}.sign:after{transform:rotate(-38deg)}
+.topright{display:flex;align-items:center;gap:22px}.topright a:hover,.tinybtn:hover{color:var(--orange)}.live{display:flex;align-items:center;gap:9px;color:var(--orange)}.live:before{content:"";width:6px;height:6px;border-radius:50%;background:var(--orange);box-shadow:0 0 17px var(--orange);animation:glow 3s ease-in-out infinite}@keyframes glow{50%{opacity:.25}}
+.hero{display:grid;grid-template-columns:1.06fr .94fr;min-height:680px;border-bottom:1px solid var(--border)}
+.hero-left{padding:79px 65px 49px 0;display:flex;flex-direction:column;justify-content:space-between}.hero h1{font:400 clamp(58px,6.1vw,100px)/1.25 var(--serif);letter-spacing:-.07em;margin:27px 0 28px}.hero h1 em{font-weight:400;color:var(--orange)}.hero-desc{font-size:15px;line-height:2.08;color:#c1c0b9;max-width:495px}.hero-controls{display:flex;align-items:center;flex-wrap:wrap;gap:14px;margin-top:24px}.button{border:1px solid #657075;background:transparent;color:var(--ink);padding:13px 18px;min-height:48px;display:inline-flex;align-items:center;justify-content:center;gap:12px;font:500 11px var(--sans);letter-spacing:.035em;transition:.22s}.button:hover{border-color:var(--orange);color:var(--orange)}.button.hot{background:var(--orange);border-color:var(--orange);color:#182025}.button.hot:hover{background:#ffd3b9}.button:disabled{opacity:.5;cursor:not-allowed}
+.hero-bottom{display:flex;gap:25px;justify-content:space-between;align-items:end}.hero-index{font:400 41px var(--serif);letter-spacing:-.06em}.hero-meta{max-width:250px;text-align:right;line-height:1.8}
+.theatre{position:relative;min-height:680px;border-left:1px solid var(--border);overflow:hidden;background:radial-gradient(ellipse at 50% 45%,#2a2425 0%,#13171a 56%,#101316 85%)}.theatre:before{content:"";position:absolute;inset:7%;border:1px solid #6b636044;border-radius:50%;pointer-events:none}.theatre:after{content:"";position:absolute;width:1px;height:100%;top:0;left:50%;background:#a2a5a01b;pointer-events:none}.theatre canvas{position:absolute;inset:0;width:100%;height:100%}.theatre-top,.theatre-bottom{position:absolute;z-index:2;left:30px;right:30px;display:flex;justify-content:space-between;gap:14px}.theatre-top{top:26px}.theatre-bottom{bottom:28px;align-items:end}.orb-name{font:italic 400 32px var(--serif);letter-spacing:-.04em;color:#d6c1b5}.theatre-caption{text-align:right;max-width:215px}
+.section{padding:87px 0}.section-head{display:flex;justify-content:space-between;align-items:end;gap:40px;margin-bottom:32px}.section h2{font:400 clamp(38px,4.5vw,65px)/1.24 var(--serif);letter-spacing:-.058em;margin:16px 0 0}.section-aside{max-width:385px;color:var(--quiet);font-size:13px;line-height:1.9}.section-num{color:var(--orange)}
+.lenses{display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--border)}.lens{display:flex;min-height:115px;flex-direction:column;justify-content:space-between;text-align:left;padding:17px 19px;border:0;border-right:1px solid var(--border);background:#171c20;color:var(--ink);transition:.25s}.lens:last-child{border-right:0}.lens:hover{background:#293036}.lens.active{background:var(--orange);color:#172024}.lens small{font:10px var(--mono);opacity:.75}.lens span{font:400 25px var(--serif);letter-spacing:-.045em}
+.reading{display:grid;grid-template-columns:1.5fr .58fr;border:1px solid var(--border);border-top:0;min-height:380px}.reading-main{padding:42px;display:flex;flex-direction:column;justify-content:space-between;gap:18px}.reading-q{font:400 clamp(26px,3vw,44px)/1.52 var(--serif);letter-spacing:-.035em;max-width:830px;margin:17px 0;transition:opacity .3s}.reading-note{font-size:13px;line-height:1.9;color:var(--quiet);max-width:680px}.reading-side{background:#1b2124;border-left:1px solid var(--border);padding:28px;display:flex;flex-direction:column;justify-content:space-between;gap:28px}.reading-side strong{font:400 52px var(--serif);letter-spacing:-.065em}.counter{display:flex;justify-content:space-between;align-items:center;gap:10px}.progress{height:2px;background:#485153;overflow:hidden}.progress div{width:10%;height:100%;background:var(--orange);transition:width 1s linear}.reading-actions{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;align-items:center}
+.studio{border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:linear-gradient(145deg,#151a1d 10%,#141819 80%)}.studio-grid{display:grid;grid-template-columns:.88fr 1.12fr;gap:65px;align-items:start}.studio-side{padding-top:8px}.studio-side p{color:var(--quiet);line-height:2;max-width:400px;font-size:14px}.concept-list{margin-top:35px;border-top:1px solid var(--border)}.concept{padding:15px 0;border-bottom:1px solid var(--border);display:flex;align-items:baseline;gap:13px;color:#c5c5bc}.concept b{font:10px var(--mono);color:var(--orange);font-weight:400}.concept span{font:400 16px var(--serif)}
+.chat{border:1px solid #525b5d;background:#1d2325;min-height:570px;display:flex;flex-direction:column}.chathead{padding:19px 22px;border-bottom:1px solid #475153;display:flex;justify-content:space-between;gap:15px;align-items:center}.chatstatus{font:10px var(--mono);color:var(--orange)}.messages{height:310px;overflow-y:auto;padding:24px 25px;display:flex;flex-direction:column;gap:18px;scrollbar-color:#566065 transparent}.bubble{max-width:90%;white-space:pre-wrap;line-height:1.85;font-size:13px}.bubble[data-role=user]{background:#31393a;border:1px solid #505c5d;align-self:flex-end;padding:13px 16px;border-radius:12px 12px 2px 12px}.bubble[data-role=assistant]{align-self:flex-start;border-left:2px solid var(--orange);padding-left:17px;color:#e1ded4}.bubble .who{display:block;font:10px var(--mono);color:var(--orange);margin-bottom:8px}.chatbottom{margin-top:auto;padding:17px 19px;border-top:1px solid #475153}.chattextarea{width:100%;background:#151b1e;border:1px solid #455051;color:var(--ink);resize:vertical;min-height:95px;padding:15px 16px;line-height:1.7;font-size:13px}.chattextarea::placeholder{color:#889490}.chatrow{margin-top:11px;display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}.chatrow .eyebrow{max-width:290px;font-size:9px}
+.deepmode{margin-top:13px;padding:14px 0 0;border-top:1px solid #3d484a;display:flex;gap:15px;flex-wrap:wrap;align-items:center;justify-content:space-between}.tinybtn{border:0;background:transparent;padding:0;color:#c2c4bd;font:10px var(--mono);text-decoration:underline;text-underline-offset:4px}.llmnote{color:#aab2ac;font-size:10px;line-height:1.65;max-width:325px}.llmstate{font:10px var(--mono);color:var(--orange);margin:9px 0 0;min-height:16px}
+.lower{display:grid;grid-template-columns:1fr .85fr;gap:65px}.diary{border-top:1px solid var(--border)}.entry{display:grid;grid-template-columns:110px 1fr;gap:20px;padding:21px 0;border-bottom:1px solid var(--border);align-items:start}.entry .eyebrow{color:var(--orange)}.entry p{margin:0;font:400 19px/1.75 var(--serif);letter-spacing:-.015em}.empty{color:var(--quiet);padding:30px 0;line-height:1.85}.privacy-panel{border:1px solid var(--border);background:var(--surface);padding:31px}.privacy-panel h3{font:400 34px var(--serif);margin:16px 0 10px}.privacy-panel p{color:var(--quiet);font-size:12px;line-height:2}.memory-options{display:flex;gap:8px;flex-wrap:wrap;margin-top:21px}.privacy-footer{margin-top:24px;padding-top:20px;border-top:1px solid var(--border);display:flex;gap:18px;flex-wrap:wrap}.check{display:flex;align-items:center;gap:10px;color:#e0dfd4;font-size:12px}.check input{accent-color:var(--orange)}
+.foot{border-top:1px solid var(--border);padding:34px 0 42px;display:flex;justify-content:space-between;gap:35px}.foot p{max-width:880px;margin:0;color:#9a9e9a;font-size:11px;line-height:2}.foot .footer-glyph{font:48px var(--serif);color:var(--orange);line-height:1}
+@media(max-width:1100px){.wrap{width:calc(100% - 64px)}.hero{min-height:620px}.theatre{min-height:620px}.hero-left{padding:68px 30px 40px 0}.studio-grid,.lower{gap:32px}}
+@media(max-width:800px){.wrap{width:calc(100% - 38px)}.topright a{display:none}.hero{grid-template-columns:1fr}.hero-left{min-height:535px;padding:65px 0 32px}.hero h1{font-size:clamp(55px,10vw,87px)}.theatre{height:510px;min-height:0;border-left:0;border-top:1px solid var(--border)}.section{padding:70px 0}.section-head{display:block}.section-aside{max-width:none;margin-top:17px}.studio-grid,.lower{grid-template-columns:1fr}.studio-side{padding-top:0}.reading{grid-template-columns:1fr}.reading-side{border-left:0;border-top:1px solid var(--border);flex-direction:row;align-items:center}.reading-side strong{font-size:42px}.lenses{grid-template-columns:repeat(5,1fr)}.lens{padding:15px 11px;min-height:100px}.lens span{font-size:19px}.chat{min-height:520px}.concept-list{display:none}}
+@media(max-width:520px){.wrap{width:calc(100% - 30px)}.top{height:68px}.topright .eyebrow{font-size:9px}.hero-left{min-height:550px;padding:47px 0 31px}.hero h1{font-size:clamp(49px,11.5vw,66px);margin-top:45px}.hero-desc{font-size:13px}.hero-index{font-size:34px}.theatre{height:405px}.theatre-top,.theatre-bottom{left:17px;right:17px}.orb-name{font-size:25px}.theatre-caption{max-width:155px}.section{padding:61px 0}.section h2{font-size:39px}.lenses{grid-template-columns:repeat(3,1fr)}.lens{border-bottom:1px solid var(--border)}.lens:nth-child(3){border-right:0}.lens:nth-child(4),.lens:nth-child(5){border-bottom:0}.reading-main{padding:24px}.reading-q{font-size:27px}.reading-side{padding:20px}.reading-side strong{font-size:32px}.messages{padding:19px 15px}.chathead{padding:17px 15px}.chatbottom{padding:13px}.entry{grid-template-columns:80px 1fr;gap:12px}.entry p{font-size:16px}.privacy-panel{padding:21px}.foot{padding:24px 0}.foot .footer-glyph{display:none}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+</style>
 </head>
 <body>
-  <header><div class="frame topbar">
-    <a class="brand" href="#top" aria-label="ΕΝΔΟ, αρχική"><span class="brand-icon">⊙</span><span>ΕΝΔΟ</span></a>
-    <div class="nav-right"><span class="mono status"><span class="status-dot"></span> Το σύστημα ανασυντίθεται</span><a class="mono navlink" href="#apparatus">Η ΣΚΙΑ</a><a class="mono navlink" href="#dreams">ΤΟ ΟΝΕΙΡΟ</a><a class="mono navlink" href="#vault">ΤΟ ΙΧΝΟΣ</a></div>
-  </div></header>
-  <main id="top">
-    <section class="frame hero" aria-label="Το ενδιάμεσο">
-      <div class="hero-copy">
-        <div>
-          <div class="mono hero-kicker"><span class="rule"></span> ΕΡΓΑΣΤΗΡΙΟ ΑΝΑΛΥΤΙΚΗΣ ΨΥΧΟΛΟΓΙΑΣ / 001</div>
-          <h1>ΚΑΤΙ<br><span class="ghost">ΜΕΣΑ</span><br><span class="indent">ΜΑΣ.</span></h1>
-          <p class="hero-desc">Μια μηχανή για όσα δεν χωρούν στην καθημερινή γλώσσα. Δεν προβλέπει, δεν διαγιγνώσκει, δεν απαντά για λογαριασμό σου. Μόνο μετακινεί αργά τα πράγματα, ώσπου να τα αντικρίσεις αλλιώς.</p>
-        </div>
-        <div class="hero-bottom"><div class="hero-index"><b id="cycleCount">001</b><span class="mono">εκδοχή<br>του ίδιου εαυτού</span></div><a class="scroll-label mono" href="#apparatus">Μπες στο πεδίο <span class="arrow-down">↓</span></a></div>
-      </div>
-      <div class="sphere-stage" id="sphereStage" aria-label="Διαδραστικό αφηρημένο νευρωνικό πεδίο">
-        <canvas id="psyche" aria-hidden="true"></canvas><div class="marker"></div>
-        <span class="mono sphere-title">ΣΧΗΜΑ / ΨΥΧΗ</span>
-        <span class="mono sphere-coord" id="coord">00° / 00°<br>ΚΙΝΗΣΗ: ΑΥΤΟΝΟΜΗ</span>
-        <div class="sphere-bottom"><span class="mono hint">ΚΙΝΗΣΕ ΤΟΝ ΔΕΙΚΤΗ.<br>ΔΕΝ ΘΑ ΔΕΙΣ ΤΟ ΙΔΙΟ ΣΧΗΜΑ.</span><span class="mono measure" id="pulseText">ΠΑΛΜΟΣ 01<br>ΠΕΔΙΟ ΕΝΕΡΓΟ</span></div>
-      </div>
-    </section>
-    <section class="section frame" id="apparatus">
-      <div class="section-intro">
-        <div><div class="mono section-tag">01 / Η ΕΣΩΤΕΡΙΚΗ ΜΗΧΑΝΗ</div><h2>Δεν είμαστε μόνο<br>όσα γνωρίζουμε.</h2></div>
-        <p class="intro-aside">Πέντε όψεις μιας ενιαίας εμπειρίας. Πάτησε μία. Οι φράσεις, το χρώμα και η μορφή μεταβάλλονται. Η μηχανή επιλέγει ξανά, χωρίς να επαναλαμβάνει μηχανικά την ίδια εξομολόγηση.</p>
-      </div>
-      <div class="modes" role="group" aria-label="Επιλογή ψυχικής όψης">
-        <button class="mode" data-mode="persona" aria-pressed="false"><span class="mode-no mono">01 / ΕΞΩ</span><span class="mode-label">Περσόνα</span></button>
-        <button class="mode active" data-mode="shadow" aria-pressed="true"><span class="mode-no mono">02 / ΚΑΤΩ</span><span class="mode-label">Σκιά</span></button>
-        <button class="mode" data-mode="dream" aria-pressed="false"><span class="mode-no mono">03 / ΥΠΝΟΣ</span><span class="mode-label">Όνειρο</span></button>
-        <button class="mode" data-mode="opposites" aria-pressed="false"><span class="mode-no mono">04 / ΜΕΤΑΞΥ</span><span class="mode-label">Αντίθεση</span></button>
-        <button class="mode" data-mode="self" aria-pressed="false"><span class="mode-no mono">05 / ΟΛΟΝ</span><span class="mode-label">Εαυτός</span></button>
-      </div>
-      <div class="organism">
-        <div class="reading">
-          <div class="reading-top mono"><span id="modePath">02 — ΣΚΙΑ / ΕΣΩΤΕΡΙΚΗ ΤΡΙΒΗ</span><span id="phraseNo">ΣΗΜΑ 001</span></div>
-          <div><p class="thought" id="thought" aria-live="off">Δεν είναι κάθε σιωπή άδεια. Μερικές φορές απλώς σταματά να μας επιστρέφει την εικόνα που ζητούσαμε.</p><p class="thought-tail" id="thoughtTail"></p></div>
-          <div class="reading-end"><button class="btn primary" id="mutate">ΜΙΑ ΑΛΛΗ ΕΚΔΟΧΗ <span aria-hidden="true">↗</span></button><button class="btn" id="pause">ΠΑΥΣΗ ΤΗΣ ΡΟΗΣ <span aria-hidden="true">Ⅱ</span></button><span class="mono muted" id="nextCounter">ΑΝΑΝΕΩΣΗ / 18s</span></div>
-        </div>
-        <div class="side-metrics">
-          <div><div class="mono metrics-label">ΤΟΠΙΚΟΣ ΧΡΟΝΟΣ</div><div class="metrics-time" id="clock">--:--</div><div class="metrics-phase" id="timePhase">Η ώρα δεν είναι απάντηση.</div></div>
-          <div class="metric-foot"><div class="slider-box"><label class="mono muted" for="intensity">ΕΝΤΑΣΗ / ΡΥΘΜΟΣ</label><output class="mono" id="intensityValue">42%</output></div><input type="range" id="intensity" min="0" max="100" value="42" aria-label="Ένταση της κίνησης και της αλλαγής"><div class="track mono"><span>ΗΡΕΜΙΑ</span><span>ΑΝΑΤΑΡΑΧΗ</span></div></div>
-          <div class="trace"><div class="mono metrics-label">ΤΙ ΑΛΛΑΞΕ / ΔΙΑΦΑΝΕΙΑ</div><p id="traceText">Η φράση προέκυψε από τον επιλεγμένο άξονα, την τοπική ώρα και έναν μεταβαλλόμενο σπόρο τυχαιότητας.</p></div>
-        </div>
-      </div>
-    </section>
-    <section class="dream-section" id="dreams"><div class="frame dream-layout">
-      <div><div class="mono section-tag">02 / ΣΥΝΤΟΜΑ ΑΠΟ ΤΟ ΑΣΥΝΕΙΔΗΤΟ</div><h2 class="feed-title">Οι μικρές<br>μετατοπίσεις.</h2><p class="intro-aside" style="justify-self:start;margin:0 0 28px">Κάθε λίγο, ένα νέο θραύσμα αντικαθιστά το παλαιότερο. Όχι ειδήσεις. Όχι μαντεία. Εσωτερικός καιρός από λέξεις, ώρα και τυχαιότητα.</p><div class="feed" id="feed" aria-label="Ροή νέων φράσεων"></div></div>
-      <div class="vault" id="vault"><div class="mono privacy">◎ / ΙΔΙΩΤΙΚΟ ΠΕΔΙΟ · ΧΩΡΙΣ ΑΠΟΣΤΟΛΗ</div><h3>Άφησε κάτι<br>χωρίς αποδέκτη.</h3><p class="vault-desc">Μια λέξη, μία σκέψη ή μια φράση που δεν χρειάζεται να φτάσει πουθενά. Το δωμάτιο αντιδρά μόνο στο μήκος και στον ρυθμό των λέξεων — όχι στο νόημά τους. Το περιεχόμενο μένει αποκλειστικά σε αυτή τη συσκευή.</p><label for="journal" class="mono muted" style="display:block;margin-bottom:12px">ΣΗΜΕΙΩΜΑ / ΕΩΣ 240 ΧΑΡΑΚΤΗΡΕΣ</label><textarea id="journal" maxlength="240" placeholder="Σήμερα δεν χρειάζεται να εξηγήσω..."></textarea><div class="vault-row"><span class="mono muted" id="charCount">000 / 240</span><button class="btn primary" id="absorb">ΑΦΗΣΕ ΤΟ ΕΔΩ ↗</button></div><div class="vault-feedback" id="vaultFeedback" role="status">Μερικά πράγματα αξίζουν έναν τόπο, όχι έναν παραλήπτη.</div><div class="vault-tools"><span class="mono" id="noteCount">0 ΙΔΙΩΤΙΚΑ ΙΧΝΗ</span><button class="subtle" id="clearNotes">Σβήσε τα ίχνη</button></div></div>
-    </div></section>
-    <section class="archive frame" id="archive">
-      <div class="archive-head"><div class="archive-title"><div class="mono section-tag">03 / ΜΙΚΡΕΣ ΑΝΤΙΣΤΑΣΕΙΣ</div><h2>Τρία πράγματα<br>που δεν συμφωνούν.</h2></div><p class="intro-aside">Δεν χρειάζεται να τα επιλύσεις. Άγγιξέ τα για να αλλάξει ο άξονας του πεδίου.</p></div>
-      <div class="archive-list">
-        <button class="archive-card" data-go="opposites"><span class="mono">Ι / ΤΟ ΠΑΡΑΔΟΞΟ</span><p>Μπορεί κάτι να ήταν αληθινό και να μην ήταν αμοιβαίο με τον ίδιο τρόπο.</p><span class="card-arrow">↗</span></button>
-        <button class="archive-card" data-go="persona"><span class="mono">ΙΙ / Η ΜΑΣΚΑ</span><p>Η μεγαλύτερη προσαρμογή είναι μερικές φορές να παραδεχτείς ότι κουράστηκες.</p><span class="card-arrow">↗</span></button>
-        <button class="archive-card" data-go="dream"><span class="mono">ΙΙΙ / ΤΟ ΟΝΕΙΡΟ</span><p>Στον ύπνο επιτρέπεται να συμβεί κάτι που η πραγματικότητα δεν υποσχέθηκε.</p><span class="card-arrow">↗</span></button>
-      </div>
-    </section>
-  </main>
-  <footer><div class="frame foot"><p><span class="mono" style="color:var(--accent)">ΕΝΔΟ / ΕΝΑΣ ΜΗΧΑΝΙΣΜΟΣ ΕΝΔΟΣΚΟΠΗΣΗΣ</span><br>Πρωτότυπες δημιουργικές συνθέσεις εμπνευσμένες από τις έννοιες της σκιάς, της περσόνας, των αντιθέτων και της εξατομίκευσης του C. G. Jung — όχι αυτούσια αποφθέγματα, θεραπεία ή διάγνωση. Το σύστημα δεν έχει συνείδηση, μνήμη άλλων ανθρώπων ή πρόσβαση στις σκέψεις τους. Αλλάζει αυτόνομα με τον χρόνο και τις δικές σου κινήσεις. Οι προσωπικές σημειώσεις παραμένουν τοπικά στον browser.</p><div class="foot-mark" aria-hidden="true">◌</div></div></footer>
-  <script>
-  (function(){
-    "use strict";
-    var defs={
-      persona:{label:"ΠΕΡΣΟΝΑ",path:"01 — ΠΕΡΣΟΝΑ / ΤΟ ΠΡΟΣΩΠΟ ΠΟΥ ΔΕΙΧΝΟΥΜΕ",color:"#dcc3ae",rgb:"220,195,174",
-        lines:[
-          "Ο εαυτός που παρουσιάζουμε στους άλλους δεν είναι ψεύτικος. Είναι απλώς μικρότερος από εκείνον που επιστρέφει σπίτι.",
-          "Δεν είναι κάθε ευγένεια μια πράξη ηρεμίας. Μερικές φορές είναι η πιο καλοσχεδιασμένη μορφή εξάντλησης.",
-          "Ο κοινωνικός ρόλος μας προστατεύει μέχρι τη στιγμή που ξεχνάμε ότι τον επιλέξαμε.",
-          "Κάποτε η ανάγκη να μη δυσκολέψουμε κανέναν γίνεται ένας τρόπος να μη συναντήσουμε ούτε τον εαυτό μας.",
-          "Υπάρχει μια ιδιαίτερη μοναξιά στο να σε συμπαθούν για μια εκδοχή σου που διαρκώς επιμελείσαι.",
-          "Η ωριμότητα ίσως αρχίζει όταν ένα ευγενικό όχι δεν χρειάζεται να εξηγηθεί σαν προσωπική αποτυχία.",
-          "Δεν χρειαζόμαστε πάντα μια καινούργια προσωπικότητα. Μερικές φορές χρειάζεται να ξεκουραστεί εκείνη που εργαζόταν αδιάκοπα.",
-          "Αν δεν ζητούσες έγκριση για δέκα λεπτά, ποια μικρή αλήθεια θα ακουγόταν πρώτη;"
-        ],
-        ends:["Η προσαρμογή δεν είναι προδοσία. Η εξαφάνιση μέσα της ίσως είναι.","Το δύσκολο δεν είναι να αφαιρέσεις τη μάσκα. Είναι να μη μισήσεις αυτόν που τη χρειάστηκε.","Κανένα πρόσωπο δεν χρειάζεται να εξηγεί όλα τα υπόλοιπα.","Μια αληθινή σχέση αντέχει και μία στιγμή χωρίς παράσταση."]
-      },
-      shadow:{label:"ΣΚΙΑ",path:"02 — ΣΚΙΑ / ΟΣΑ ΑΠΩΘΟΥΜΕ",color:"#c3ef9d",rgb:"195,239,157",
-        lines:[
-          "Δεν είναι πάντα οι πράξεις μας που ζητούν συγχώρεση. Είναι και ο τρόπος που συνεχίζουμε να τιμωρούμε τον εαυτό μας αφού τις αναγνωρίσουμε.",
-          "Κάποια πράγματα αποκτούν υπερβολική εξουσία όταν τα αντιμετωπίζουμε αποκλειστικά σαν ελαττώματα.",
-          "Μπορεί να νοιάζεσαι αληθινά και ταυτόχρονα να χρειάζεται να μάθεις πού τελειώνει ο χώρος του άλλου.",
-          "Η σκιά δεν είναι ένας κακός συγκάτοικος. Είναι ό,τι μάθαμε να κρύβουμε ακόμη κι όταν ζητούσε μόνο προσοχή.",
-          "Η ενοχή γίνεται λιγότερο χρήσιμη τη στιγμή που σταματά να αλλάζει συμπεριφορές και αρχίζει να καταναλώνει ημέρες.",
-          "Μια επίμονη εσωτερική αφήγηση μπορεί να είναι ακριβής ως προς τον πόνο και λανθασμένη ως προς το συμπέρασμα.",
-          "Μερικές φορές δεν μας τρομάζει το λάθος. Μας τρομάζει η πιθανότητα ότι δεν μπορούμε να ελέγξουμε την ερμηνεία του άλλου.",
-          "Η αναγνώριση μιας δύσκολης πλευράς δεν σημαίνει ότι θα της παραχωρήσουμε και το τιμόνι."
-        ],
-        ends:["Η επίγνωση δεν ζητά ισόβια αυτοτιμωρία.","Το συναίσθημα είναι πληροφορία. Δεν είναι εντολή.","Δεν χρειάζεται να είμαστε αθώοι για να μπορούμε να γίνουμε προσεκτικότεροι.","Η αποδοχή της σκιάς δεν είναι άδεια να πληγώνει."]
-      },
-      dream:{label:"ΟΝΕΙΡΟ",path:"03 — ΟΝΕΙΡΟ / Η ΕΙΚΟΝΑ ΧΩΡΙΣ ΜΑΡΤΥΡΑ",color:"#aabaf8",rgb:"170,186,248",
-        lines:[
-          "Ένα όνειρο μπορεί να αφήσει αληθινό συναίσθημα χωρίς να περιέχει αληθινό γεγονός. Αυτό δεν το κάνει λιγότερο συγκλονιστικό.",
-          "Στον ύπνο οι παράλογες μεταβάσεις μοιάζουν φυσικές. Ίσως επειδή η συνείδηση δεν απαιτεί κάθε φορά αποδείξεις ταυτότητας.",
-          "Μια νυχτερινή σκηνή μπορεί να γίνει σημαντικότερη από μια ολόκληρη ημέρα, χωρίς να σημαίνει ότι προέβλεψε τίποτε.",
-          "Τα όνειρα είναι περίεργες συνθέσεις μνήμης και φαντασίας. Δεν οφείλουν να τηρούν τις απαγορεύσεις της πραγματικότητας.",
-          "Μερικά ξυπνήματα μοιάζουν με δεύτερη απώλεια, επειδή λίγα λεπτά πριν κάτι είχε υπάρξει απολύτως πειστικά.",
-          "Το ονειρικό παράδοξο δεν είναι ότι πιστεύουμε το απίθανο. Είναι ότι αισθανόμαστε πρώτα και αμφισβητούμε αργότερα.",
-          "Δεν χρειάζεται να ερμηνεύσεις κάθε όνειρο. Μπορείς απλώς να παραδεχτείς την αίσθηση που άφησε.",
-          "Η διαύγεια του ξυπνήματος δεν ακυρώνει τη συγκίνηση του ύπνου· απλώς της δίνει άλλο τόπο."
-        ],
-        ends:["Το όνειρο δεν είναι μήνυμα από κάποιον άλλον.","Η νύχτα δεν υπόσχεται όσα μας επιτρέπει να αισθανθούμε.","Η μνήμη μιας ανύπαρκτης σκηνής μπορεί να είναι μια απολύτως υπαρκτή εμπειρία.","Κάποτε η πιο ευγενική ερμηνεία είναι να μη δοθεί ερμηνεία."]
-      },
-      opposites:{label:"ΑΝΤΙΘΕΣΗ",path:"04 — ΑΝΤΙΘΕΣΗ / ΔΥΟ ΑΛΗΘΕΙΕΣ ΜΑΖΙ",color:"#f2aa95",rgb:"242,170,149",
-        lines:[
-          "Μπορεί να ήμασταν ειλικρινείς με όσα αισθανόμασταν και να μην ήμασταν προσεκτικοί με όσα κάναμε.",
-          "Ο χρόνος που μοιράζονται δύο άνθρωποι είναι κοινός. Η σημασία που του αποδίδουν δεν είναι υποχρεωτικά ίδια.",
-          "Ένα τέλος μπορεί να είναι σωστό για κάποιον και δυσβάσταχτο για κάποιον άλλον, χωρίς η μία αλήθεια να ακυρώνει τη δεύτερη.",
-          "Η επιθυμία να εξηγήσουμε τα πάντα συνυπάρχει παράξενα με την ανάγκη να αφήσουμε κάποια πράγματα ανεξήγητα.",
-          "Η ωριμότητα δεν εξαφανίζει την αντίφαση. Την κάνει κατοικήσιμη.",
-          "Μια ανάμνηση μπορεί να αξίζει πολύ, ακόμη κι αν δεν αποτελεί υπόσχεση για το μέλλον.",
-          "Υπάρχουν αποφάσεις που δεν τις αισθανόμαστε σωστές την ώρα που τις σεβόμαστε.",
-          "Δεν είναι ανάγκη να μειώσουμε ό,τι υπήρξε για να αποδεχτούμε αυτό που υπάρχει."
-        ],
-        ends:["Και οι δύο προτάσεις μπορούν να παραμείνουν αληθείς.","Δεν είναι υποχώρηση να σταματήσεις να διαλέγεις μόνο τη μία πλευρά.","Η αντίφαση δεν ζητά νικητή.","Η πιο δύσκολη συμφιλίωση δεν διαγράφει κανένα από τα δύο."]
-      },
-      self:{label:"ΕΑΥΤΟΣ",path:"05 — ΕΑΥΤΟΣ / Η ΠΡΑΞΗ ΤΗΣ ΕΝΟΠΟΙΗΣΗΣ",color:"#f0da9b",rgb:"240,218,155",
-        lines:[
-          "Η εξατομίκευση δεν υπόσχεται ότι θα πάψουμε να χρειαζόμαστε ανθρώπους. Μας καλεί να μη χαθούμε ολόκληροι μέσα σε έναν.",
-          "Ο εαυτός δεν ολοκληρώνεται όταν όλες οι πλευρές του συμφωνήσουν. Κάποτε αρχίζει ακριβώς όταν σταματήσουν να κρύβονται.",
-          "Η προσωπική ιστορία δεν χρειάζεται να έχει ένα μόνο κέντρο βάρους.",
-          "Το να κρατάμε κάτι στην καρδιά μας δεν απαιτεί να το διατηρούμε και στην καθημερινή μας πρόσβαση.",
-          "Ένα καινούργιο βίωμα δεν αντικαθιστά το παλιό. Προσθέτει μια διάσταση που ακόμη δεν γνωρίζαμε.",
-          "Μερικές φορές η πιο γενναία μορφή συνέχειας είναι να συμμετέχουμε ξανά στην απλή ζωή.",
-          "Δεν χάνουμε την αλήθεια μιας εμπειρίας όταν σταματάμε να της ζητάμε να επαναληφθεί.",
-          "Η ψυχική συνοχή δεν είναι ακινησία. Είναι δυνατότητα να αλλάζουμε χωρίς να διαγράφουμε."
-        ],
-        ends:["Το όλον δεν είναι μια απάντηση· είναι η δυνατότητα να αντέξουμε περισσότερες.","Η αλλαγή δεν ακυρώνει τη μνήμη.","Ένα κομμάτι μπορεί να μείνει, χωρίς να γίνει ολόκληρη η ζωή.","Η επιστροφή στον εαυτό δεν είναι απομάκρυνση από τον κόσμο."]
-      }
-    };
-    var feedLines=[
-      "Απόψε, ο νους μπορεί να σταματήσει να υποβάλλει ερωτήσεις στις οποίες δεν υπάρχει διαθέσιμος συνομιλητής.",
-      "Δεν είναι όλες οι έντονες αναμνήσεις οδηγίες δράσης.",
-      "Η προβολή είναι ανθρώπινη. Η επανεξέτασή της είναι πράξη ελευθερίας.",
-      "Κάποια επίγνωση έρχεται καθυστερημένα. Παραμένει επίγνωση.",
-      "Ένα όνειρο δεν χρειάζεται να γίνει πραγματικότητα για να αποκτήσει θέση στη βιογραφία.",
-      "Το άγνωστο δεν μετατρέπεται σε βεβαιότητα μόνο επειδή το σκεφτήκαμε πολλές φορές.",
-      "Υπάρχουν μέρες κατά τις οποίες η επανάληψη είναι απλώς κούραση, όχι πεπρωμένο.",
-      "Οι αναμνήσεις αλλάζουν χρώμα χωρίς να αλλάζουν υποχρεωτικά γεγονότα.",
-      "Το να πεις όχι στον εαυτό σου μπορεί κάποτε να είναι ο πιο ήσυχος τρόπος να πεις ναι σε ένα όριο.",
-      "Το συναίσθημα της στιγμής δεν γνωρίζει ολόκληρη την υπόλοιπη ζωή.",
-      "Μια παλιά εκδοχή του εαυτού δεν χρειάζεται να δικαστεί κάθε πρωί.",
-      "Όταν κάτι μάς συγκλόνισε, το νόημά του δεν εξαντλείται σε μία ερμηνεία.",
-      "Το όνειρο ξέρει να παρακάμπτει τη χρονολογία. Ο ξύπνιος κόσμος όχι.",
-      "Κάθε σχέση είναι και μια ερώτηση για το ποιος γινόμαστε όταν μας προσέχουν.",
-      "Δεν υπάρχει υποχρέωση να αισθανθούμε σήμερα αυτό που ελπίζουμε να αισθανθούμε αύριο.",
-      "Ορισμένες εσωτερικές αλλαγές συμβαίνουν δίχως μάρτυρες και χωρίς κανένα τελετουργικό.",
-      "Το παράδοξο της μνήμης: όσο ακριβότερη μοιάζει, τόσο περισσότερο χρειάζεται επιείκεια στην ερμηνεία της.",
-      "Η ησυχία δεν είναι πάντα λήθη. Μερικές φορές είναι η πρώτη μη επιθετική μορφή φροντίδας.",
-      "Μια φράση που δεν ειπώθηκε μπορεί να παραμείνει αληθινή χωρίς να χρειάζεται αποστολέα.",
-      "Η προσοχή μπορεί να επιστρέψει στον κόσμο χωρίς να καταστρέψει όσα κάποτε πρόσεξε."
-    ];
-    var $=function(id){return document.getElementById(id)};
-    var safeStorage={read:function(){try{return JSON.parse(localStorage.getItem("endo-private-v1")||"[]")}catch(e){return []}},write:function(a){try{localStorage.setItem("endo-private-v1",JSON.stringify(a))}catch(e){}}};
-    var notes=safeStorage.read();if(!Array.isArray(notes))notes=[];
-    var state={mode:"shadow",intensity:42,cycle:0,paused:false,last:null,history:[],feedCounter:0,seconds:18,notes:notes.slice(0,120)};
-    var reduced=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    function rand(n){return Math.floor(Math.random()*n)}
-    function datePhase(){var h=new Date().getHours();return h<5?"Η ώρα των ανεξήγητων":h<11?"Η πρωινή εκδοχή":h<17?"Η καθαρή πλευρά της ημέρας":h<21?"Το απογευματινό ενδιάμεσο":"Η ώρα που χαμηλώνει ο κόσμος"}
-    function pad(n){return String(n).padStart(2,"0")}
-    function setClock(){var d=new Date();$("clock").textContent=pad(d.getHours())+":"+pad(d.getMinutes());$("timePhase").textContent=datePhase()}
-    function selectMode(mode){if(!defs[mode])return;state.mode=mode;document.documentElement.style.setProperty("--accent",defs[mode].color);document.querySelectorAll("[data-mode]").forEach(function(b){var on=b.dataset.mode===mode;b.classList.toggle("active",on);b.setAttribute("aria-pressed",String(on))});$("modePath").textContent=defs[mode].path;generate(true)}
-    function generate(immediate){
-      if(state.paused&&!immediate)return;
-      var d=defs[state.mode],options=d.lines.map(function(s,i){return i}).filter(function(i){return state.history.indexOf(state.mode+":"+i)===-1});
-      if(!options.length){state.history=state.history.filter(function(s){return !s.startsWith(state.mode+":")});options=d.lines.map(function(s,i){return i})}
-      var ix=options[rand(options.length)];state.history.push(state.mode+":"+ix);var tail=d.ends[rand(d.ends.length)];
-      state.cycle+=1;$("cycleCount").textContent=String(state.cycle).padStart(3,"0");$("phraseNo").textContent="ΣΗΜΑ "+String(state.cycle).padStart(3,"0");
-      var thought=$("thought");thought.classList.add("fade");
-      window.setTimeout(function(){thought.textContent=d.lines[ix];$("thoughtTail").textContent=tail;thought.classList.remove("fade");},immediate?120:300);
-      state.last={mode:d.label,index:ix,time:new Date()};
-      $("traceText").textContent="Άξονας: "+d.label.toLowerCase()+". Σύνθεση "+(ix+1)+"/"+d.lines.length+" · "+datePhase().toLowerCase()+". Επιλογή από πρωτότυπα κείμενα, όχι από ανάγνωση του νου.";
-      $("pulseText").innerHTML="ΠΑΛΜΟΣ "+String(state.cycle).padStart(2,"0")+"<br>ΠΕΔΙΟ ΕΝΕΡΓΟ";
-      state.seconds=Math.max(9,27-Math.round(state.intensity*.15));
-    }
-    function tick(){setClock();if(!state.paused){state.seconds-=1;if(state.seconds<=0){generate(false);pushFeed()}}$("nextCounter").textContent=state.paused?"Η ΡΟΗ ΣΕ ΠΑΥΣΗ":"ΑΝΑΝΕΩΣΗ / "+String(state.seconds).padStart(2,"0")+"s"}
-    function pushFeed(){if(!state.feedHistory)state.feedHistory=[];var available=feedLines.map(function(x,i){return i}).filter(function(i){return state.feedHistory.indexOf(i)===-1});if(!available.length){state.feedHistory=[];available=feedLines.map(function(x,i){return i})}var n=available[rand(available.length)];state.feedHistory.push(n);state.feedCounter++;var el=document.createElement("div");el.className="fragment";var count=document.createElement("span");count.className="frag-no mono";count.textContent=String(state.feedCounter).padStart(3,"0");var p=document.createElement("p");p.textContent=feedLines[n];el.append(count,p);$("feed").prepend(el);while($("feed").children.length>4)$("feed").lastElementChild.remove()}
-    document.querySelectorAll("[data-mode]").forEach(function(b){b.addEventListener("click",function(){selectMode(b.dataset.mode)})});
-    document.querySelectorAll("[data-go]").forEach(function(b){b.addEventListener("click",function(){selectMode(b.dataset.go);$("apparatus").scrollIntoView({behavior:reduced?"instant":"smooth"})})});
-    $("mutate").addEventListener("click",function(){generate(true);pushFeed()});
-    $("pause").addEventListener("click",function(){state.paused=!state.paused;$("pause").textContent=state.paused?"ΣΥΝΕΧΙΣΗ ΤΗΣ ΡΟΗΣ ↗":"ΠΑΥΣΗ ΤΗΣ ΡΟΗΣ Ⅱ";$("nextCounter").textContent=state.paused?"Η ΡΟΗ ΣΕ ΠΑΥΣΗ":"ΑΝΑΝΕΩΣΗ / "+state.seconds+"s"});
-    $("intensity").addEventListener("input",function(e){state.intensity=Number(e.target.value);$("intensityValue").textContent=state.intensity+"%";state.seconds=Math.max(9,27-Math.round(state.intensity*.15))});
-    $("journal").addEventListener("input",function(e){$("charCount").textContent=String(e.target.value.length).padStart(3,"0")+" / 240"});
-    function noteCounter(){$("noteCount").textContent=state.notes.length+" ΙΔΙΩΤΙΚΑ ΙΧΝΗ"}
-    $("absorb").addEventListener("click",function(){
-      var value=$("journal").value.trim();if(!value){$("vaultFeedback").textContent="Ακόμη και το κενό μπορεί να μείνει κενό. Δεν υπάρχει υποχρέωση καταγραφής.";return}
-      state.notes.push({text:value,at:new Date().toISOString()});state.notes=state.notes.slice(-120);safeStorage.write(state.notes);noteCounter();
-      var count=value.split(/\s+/).filter(Boolean).length;var variants=[
-        "Καταγράφηκε εδώ. Δεν χρειάζεται να μετατραπεί σε μήνυμα.",
-        "Μια φράση απέκτησε τόπο. Δεν χρειάζεται μάρτυρα.",
-        "Η επιθυμία να εκφραστεί κάτι δεν απαιτεί πάντοτε παραλήπτη.",
-        "Αυτό μπορεί να μείνει δικό σου, χωρίς να γίνει απαίτηση από κανέναν.",
-        "Δεν άλλαξε το παρελθόν. Άλλαξε μόνο το πού ακουμπά αυτή η πρόταση."
-      ];
-      $("vaultFeedback").textContent=variants[(count+state.notes.length)%variants.length];
-      $("journal").value="";$("charCount").textContent="000 / 240";generate(true);
-    });
-    $("clearNotes").addEventListener("click",function(){
-      if(!state.notes.length){$("vaultFeedback").textContent="Δεν υπάρχουν αποθηκευμένα ίχνη.";return}
-      if(window.confirm("Να διαγραφούν οριστικά όλες οι ιδιωτικές σημειώσεις από αυτή τη συσκευή;")){state.notes=[];safeStorage.write([]);noteCounter();$("vaultFeedback").textContent="Οι σημειώσεις διαγράφηκαν από αυτόν τον browser."}
-    });
-    noteCounter();setClock();generate(true);for(var i=0;i<4;i++)pushFeed();window.setInterval(tick,1000);
-    var canvas=$("psyche"),ctx=canvas.getContext("2d"),stage=$("sphereStage"),W=600,H=600,ptr={x:0,y:0,active:false},t=0,particles=[];
-    function resize(){var box=stage.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,2);W=Math.max(1,box.width);H=Math.max(1,box.height);canvas.width=Math.round(W*dpr);canvas.height=Math.round(H*dpr);canvas.style.width=W+"px";canvas.style.height=H+"px";ctx.setTransform(dpr,0,0,dpr,0,0);particles=Array.from({length:120},function(_,i){return{angle:i*2.399963,depth:Math.sqrt((i+.5)/120),speed:.5+((i*13)%9)/13,size:.5+((i*11)%7)/8}})}
-    if(window.ResizeObserver)new ResizeObserver(resize).observe(stage);else window.addEventListener("resize",resize);resize();
-    stage.addEventListener("pointermove",function(e){var r=stage.getBoundingClientRect();ptr.x=(e.clientX-r.left-r.width/2)/(r.width/2);ptr.y=(e.clientY-r.top-r.height/2)/(r.height/2);ptr.active=true;$("coord").innerHTML=Math.round((ptr.x+1)*90)+"° / "+Math.round((ptr.y+1)*90)+"°<br>ΚΙΝΗΣΗ: ΑΝΤΑΠΟΚΡΙΣΗ"});
-    stage.addEventListener("pointerleave",function(){ptr.active=false;$("coord").innerHTML="00° / 00°<br>ΚΙΝΗΣΗ: ΑΥΤΟΝΟΜΗ"});
-    function draw(){
-      if(!ctx)return;ctx.clearRect(0,0,W,H);var cx=W/2+ptr.x*18,cy=H/2+ptr.y*18,scale=Math.min(W,H)/2.55,rgb=defs[state.mode].rgb,energy=state.intensity/100;
-      ctx.save();ctx.translate(cx,cy);ctx.rotate(.09*Math.sin(t*.12));
-      for(var k=0;k<8;k++){var rr=scale*(.33+k*.12);ctx.beginPath();ctx.ellipse(0,0,rr,rr*(.78+.04*Math.sin(k+t*.05)),t*.006*(k%2?1:-1),0,Math.PI*2);ctx.strokeStyle="rgba("+rgb+","+(k%2?.055:.095)+")";ctx.lineWidth=.8;ctx.stroke()}
-      for(var i=0;i<particles.length;i++){var p=particles[i],a=p.angle+t*.009*p.speed*(i%2?-1:1),radius=scale*(.38+p.depth*.80),x=Math.cos(a)*radius,y=Math.sin(a)*(radius*.74),influence=ptr.active?(1-p.depth)*energy*13:0;x+=ptr.x*influence;y+=ptr.y*influence;ctx.beginPath();ctx.arc(x,y,p.size*(.5+energy),0,Math.PI*2);ctx.fillStyle="rgba("+rgb+","+(p.depth<.45?.72:.28)+")";ctx.fill()}
-      for(var layer=0;layer<5;layer++){ctx.beginPath();for(var j=0;j<=180;j++){var a=j/180*Math.PI*2,rad=scale*(.24+layer*.018)+Math.sin(a*5+t*.028+layer)*scale*.045+Math.sin(a*11-t*.023+layer)*scale*.025*energy;var x=Math.cos(a)*rad*(1+.04*Math.sin(t*.014)),y=Math.sin(a)*rad*(.78+.04*Math.cos(t*.011));if(j===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.closePath();ctx.fillStyle="rgba("+rgb+","+(layer===0?.055:.012)+")";ctx.strokeStyle="rgba("+rgb+","+(layer===4?.65:.14)+")";ctx.lineWidth=layer===4?1.2:.6;ctx.fill();ctx.stroke()}
-      ctx.beginPath();ctx.moveTo(-scale*.88,0);ctx.lineTo(scale*.88,0);ctx.moveTo(0,-scale*.88);ctx.lineTo(0,scale*.88);ctx.strokeStyle="rgba("+rgb+",.08)";ctx.stroke();ctx.restore();
-      t+=.5+energy*1.0;
-    }
-    var last=0;function frame(now){if(!document.hidden&&now-last>32){draw();last=now}if(!reduced)requestAnimationFrame(frame)}
-    if(reduced){draw();setInterval(draw,2000)}else requestAnimationFrame(frame);
-    document.addEventListener("visibilitychange",function(){if(!document.hidden)draw()});
-  })();
-  </script>
-</body>
-</html>
+<header class="wrap top">
+  <a class="logomark" href="#top" aria-label="ΕΝΔΟ αρχική"><span class="sign" aria-hidden="true"></span>ΕΝΔΟ</a>
+  <div class="topright"><span class="eyebrow live">ΠΡΟΣΩΠΙΚΟ ΠΕΔΙΟ / ΤΟΠΙΚΟ</span><a class="eyebrow" href="#studio">ΣΥΝΟΜΙΛΙΑ ↗</a><a class="eyebrow" href="#memory">ΜΝΗΜΗ ↗</a></div>
+</header>
+<main id="top">
+<section class="hero wrap">
+ <div class="hero-left">
+  <div>
+   <div class="eyebrow warm">JUNGIAN OBSERVATORY / ΠΕΙΡΑΜΑ 01</div>
+   <h1>Δεν είσαι<br>μια <em>μόνο</em><br>ερμηνεία.</h1>
+   <p class="hero-desc">Ένα δωμάτιο που μεταβάλλεται όσο μεταβάλλεσαι. Σκιά, όνειρα, αντιφάσεις και όσα δεν χρειάζεται να καταλήξουν σε μια απάντηση. Δεν διαβάζει τον νου σου. Σου επιστρέφει καλύτερες ερωτήσεις.</p>
+   <div class="hero-controls"><a class="button hot" href="#studio">ΜΙΛΗΣΕ ΣΤΟ ΕΝΔΟ <span aria-hidden="true">↗</span></a><a class="button" href="#field">ΠΑΡΑΤΗΡΗΣΕ ΤΟ ΠΕΔΙΟ ↓</a></div>
+  </div>
+  <div class="hero-bottom"><div><span class="eyebrow">ΤΟΠΙΚΗ ΩΡΑ</span><div id="bigclock" class="hero-index">--:--</div></div><div class="hero-meta eyebrow">ΧΩΡΙΣ ΔΙΑΓΝΩΣΕΙΣ. ΧΩΡΙΣ ΚΡΥΦΕΣ ΠΡΟΒΛΕΨΕΙΣ. ΜΕ ΧΩΡΟ ΓΙΑ ΑΝΤΙΦΑΣΕΙΣ.</div></div>
+ </div>
+ <div class="theatre" id="theatre">
+  <canvas id="fieldCanvas" aria-hidden="true"></canvas>
+  <div class="theatre-top"><span class="eyebrow warm">01 / ΧΑΡΤΟΓΡΑΦΗΣΗ</span><span class="eyebrow" id="coordinates">00° / 00°</span></div>
+  <div class="theatre-bottom"><div><span class="eyebrow">ΤΡΕΧΩΝ ΑΞΟΝΑΣ</span><div class="orb-name" id="orbName">Σκιά</div></div><div class="theatre-caption eyebrow" id="orbCaption">ΤΟ ΣΧΗΜΑ ΑΛΛΑΖΕΙ ΜΕ ΤΗΝ ΩΡΑ ΚΑΙ ΤΙΣ ΕΠΙΛΟΓΕΣ ΣΟΥ.</div></div>
+ </div>
+</section>
+<section class="section wrap" id="field">
+ <div class="section-head"><div><div class="eyebrow section-num">02 / ΕΝΑΣ ΧΑΡΤΗΣ ΧΩΡΙΣ ΟΡΙΣΤΙΚΗ ΕΚΔΟΣΗ</div><h2>Πέντε τρόποι<br>να κοιτάξεις μέσα.</h2></div><p class="section-aside">Το κείμενο μεταβάλλεται ανά λεπτό και ημέρα. Δεν παρουσιάζεται ως σκέψη κάποιας συνειδητής μηχανής· είναι μια επιμελημένη, μεταβαλλόμενη σύνθεση.</p></div>
+ <div class="lenses" role="group" aria-label="Επίλεξε άξονα παρατήρησης">
+  <button class="lens active" data-axis="shadow" aria-pressed="true"><small>01 / ΤΟ ΑΝΕΙΠΩΤΟ</small><span>Σκιά</span></button>
+  <button class="lens" data-axis="persona" aria-pressed="false"><small>02 / ΤΟ ΠΡΟΣΩΠΟ</small><span>Περσόνα</span></button>
+  <button class="lens" data-axis="dream" aria-pressed="false"><small>03 / Ο ΥΠΝΟΣ</small><span>Όνειρο</span></button>
+  <button class="lens" data-axis="bond" aria-pressed="false"><small>04 / ΤΟ ΜΑΖΙ</small><span>Δεσμός</span></button>
+  <button class="lens" data-axis="self" aria-pressed="false"><small>05 / ΤΟ ΟΛΟΝ</small><span>Εαυτός</span></button>
+ </div>
+ <div class="reading">
+  <div class="reading-main">
+   <div class="eyebrow warm" id="signal">ΠΑΡΑΤΗΡΗΣΗ / 001</div>
+   <div><p class="reading-q" id="readingQ" aria-live="polite">Κάτι μέσα μας μπορεί να παραμένει σημαντικό χωρίς να καθορίζει κάθε επόμενη απόφαση.</p><p class="reading-note" id="readingNote">Καμία ερμηνεία δεν είναι τελική.</p></div>
+   <div class="reading-actions"><button class="button" id="another">ΜΙΑ ΑΛΛΗ ΟΠΤΙΚΗ ↗</button><span class="eyebrow" id="phase">ΝΕΑ ΣΥΝΘΕΣΗ ΣΕ 60s</span></div>
+  </div>
+  <div class="reading-side"><div><div class="eyebrow">ΗΜΕΡΑ / ΠΑΛΜΟΣ</div><strong id="dayNum">--</strong><div class="eyebrow" id="monthName">—</div></div><div style="width:100%"><div class="counter eyebrow"><span>ΜΕΤΑΒΟΛΗ</span><span id="progressTxt">00%</span></div><div class="progress" aria-hidden="true"><div id="bar"></div></div><p class="reading-note" style="margin-bottom:0" id="fieldContext">Οι επαναλήψεις είναι ερωτήσεις, όχι προγνώσεις.</p></div></div>
+ </div>
+</section>
+<section class="studio section" id="studio">
+ <div class="wrap studio-grid">
+ <div class="studio-side">
+  <div class="eyebrow warm">03 / Ο ΕΣΩΤΕΡΙΚΟΣ ΣΥΝΟΜΙΛΗΤΗΣ</div>
+  <h2>Μια ερώτηση.<br>Όχι ετυμηγορία.</h2>
+  <p>Συζήτησε με έναν στοχαστικό συνομιλητή εμπνευσμένο από την αναλυτική ψυχολογία του C. G. Jung. Το ΕΝΔΟ δεν είναι ο Γιουνγκ, δεν έχει συνείδηση και δεν γνωρίζει τι σκέφτονται άλλοι. Προτείνει οπτικές, όχι διαγνώσεις.</p>
+  <div class="concept-list"><div class="concept"><b>Ⅰ</b><span>Η προβολή δεν είναι γεγονός.</span></div><div class="concept"><b>Ⅱ</b><span>Η σκιά δεν είναι καταδίκη.</span></div><div class="concept"><b>Ⅲ</b><span>Το όνειρο δεν είναι προφητεία.</span></div><div class="concept"><b>Ⅳ</b><span>Ένα όριο μπορεί να συνυπάρχει με το νοιάξιμο.</span></div></div>
+ </div>
+ <div class="chat">
+  <div class="chathead"><div><div class="eyebrow">ΕΝΔΟ / ΔΙΑΛΟΓΟΣ</div><div class="chatstatus" id="engineLabel">ΛΕΙΤΟΥΡΓΙΑ / ΤΟΠΙΚΟΣ ΣΤΟΧΑΣΜΟΣ</div></div><span class="eyebrow">◉ ΙΔΙΩΤΙΚΟ</span></div>
+  <div class="messages" id="messages" aria-live="polite" aria-label="Συνομιλία"><div class="bubble" data-role="assistant"><span class="who">ΕΝΔΟ</span>Δεν χρειάζεται να αποφασίσουμε τι σημαίνουν όλα. Ποια λεπτομέρεια της σημερινής ημέρας θα ήθελες να κοιτάξουμε διαφορετικά;</div></div>
+  <div class="chatbottom">
+   <label for="prompt" class="eyebrow" style="display:block;margin-bottom:10px">ΚΑΤΑΓΡΑΨΕ ΜΙΑ ΣΚΕΨΗ / ΜΙΑ ΕΡΩΤΗΣΗ / ΕΝΑ ΟΝΕΙΡΟ</label>
+   <textarea id="prompt" class="chattextarea" maxlength="1800" placeholder="Σήμερα παρατήρησα κάτι που δεν ξέρω πώς να ονομάσω..."></textarea>
+   <div class="chatrow"><span class="eyebrow">CTRL + ENTER ΓΙΑ ΑΠΟΣΤΟΛΗ</span><button class="button hot" id="send">ΔΙΕΡΕΥΝΗΣΗ ↗</button></div>
+   <div class="deepmode"><div><button class="tinybtn" id="loadLLM">ΕΝΕΡΓΟΠΟΙΗΣΗ ΠΡΑΓΜΑΤΙΚΟΥ ΤΟΠΙΚΟΥ LLM ↗</button><div class="llmstate" id="llmState">Προαιρετικό · WebGPU · λήψη μοντέλου στη συσκευή</div></div><p class="llmnote">Χωρίς LLM: θεματική σύνθεση, όχι παραγωγική ΤΝ. Με LLM: η επεξεργασία παραμένει στον browser μετά τη λήψη του μοντέλου. Η ποιότητα εξαρτάται από τη συσκευή.</p></div>
+  </div>
+ </div>
+ </div>
+</section>
+<section class="section wrap" id="memory">
+ <div class="section-head"><div><div class="eyebrow section-num">04 / ΙΔΙΩΤΙΚΟ ΑΡΧΕΙΟ</div><h2>Όσα επιλέγεις<br>να κρατήσεις.</h2></div><p class="section-aside">Η προσωπική μνήμη δεν είναι δημόσιο προφίλ. Οι καταγραφές μένουν σε αυτόν τον browser και μπορείς να τις εξαγάγεις ή να τις διαγράψεις.</p></div>
+ <div class="lower">
+  <div><div class="eyebrow warm">ΣΥΝΤΟΜΑ ΑΠΟΣΠΑΣΜΑΤΑ / ΑΠΟ ΤΟ ΤΟΠΙΚΟ ΗΜΕΡΟΛΟΓΙΟ</div><div class="diary" id="diary"></div></div>
+  <aside class="privacy-panel">
+   <div class="eyebrow warm">ΑΥΤΟΝΟΜΙΑ / ΔΙΑΦΑΝΕΙΑ</div><h3>Η μνήμη<br>σού ανήκει.</h3>
+   <p>Αποθηκεύονται μόνο όσα γράφεις εδώ, αν το επιτρέπεις. Χρησιμοποιούνται για μικρές τοπικές προσαρμογές των ερωτήσεων. Το σύστημα δεν διαβάζει προηγούμενες συνομιλίες σου στο ChatGPT και δεν παρακολουθεί άλλους ανθρώπους.</p>
+   <label class="check"><input type="checkbox" id="remember" checked> Κράτησε τοπικά τις δικές μου καταγραφές</label>
+   <div class="memory-options"><button class="button" id="export">ΕΞΑΓΩΓΗ JSON ↓</button><button class="button" id="clear">ΔΙΑΓΡΑΦΗ ΜΝΗΜΗΣ ×</button></div>
+   <div class="privacy-footer"><span class="eyebrow" id="entryCount">00 ΚΑΤΑΓΡΑΦΕΣ</span><span class="eyebrow" id="storedLabel">ΑΠΟΘΗΚΕΥΣΗ / ΜΟΝΟ ΤΟΠΙΚΑ</span></div>
+  </aside>
+ </div>
+</section>
+</main>
+<footer class="foot wrap"><p><span class="eyebrow warm">ΕΝΔΟ / ΨΥΧΙΚΟ ΠΑΡΑΤΗΡΗΤΗΡΙΟ</span><br>Ανεξάρτητο δημιουργικό έργο εμπνευσμένο από έννοιες της αναλυτικής ψυχολογίας του Carl Gustav Jung. Δεν αποτελεί αυθεντική φωνή ή αποφθέγματά του, ψυχοθεραπεία, ιατρική εκτίμηση ή πραγματικά συνειδητή οντότητα. Τα πορτρέτα άλλων ανθρώπων στο μυαλό μας είναι υποθέσεις, όχι πρόσβαση στις σκέψεις τους. Οι αυτόματες μεταβολές λειτουργούν όσο η σελίδα είναι ανοιχτή, με νέο ημερήσιο περιεχόμενο όταν επιστρέφεις.</p><div class="footer-glyph" aria-hidden="true">◌</div></footer>
+<script>
+(function(){
+"use strict";
+var K="endo-observatory-v3",OLD="endo-private-v1", $=function(id){return document.getElementById(id)};
+var initial={axis:"shadow",entries:[],dialog:[],remember:true};
+try{var saved=JSON.parse(localStorage.getItem(K)||"null");if(saved&&typeof saved==="object"){initial.axis=saved.axis||initial.axis;initial.entries=Array.isArray(saved.entries)?saved.entries.slice(-80):[];initial.dialog=Array.isArray(saved.dialog)?saved.dialog.slice(-18):[];initial.remember=saved.remember!==false;}else{var old=JSON.parse(localStorage.getItem(OLD)||"[]");if(Array.isArray(old)){initial.entries=old.filter(function(n){return n&&typeof n.text==="string"}).slice(-60).map(function(n){return {text:n.text.slice(0,1800),at:n.at||new Date().toISOString(),axis:"self"}})}}}catch(e){}
+var db=initial,model=null,busy=false,cycle=0,remaining=60,turnIndex=0,fieldSeed=0,lastTopic="shadow";
+var axes={
+ shadow:{label:"Σκιά",key:["φοβ","ενοχ","θυμ","θυμω","ντροπ","λάθο","ενοχ","επιμον","αρν","μισ"],q:[
+ "Αν η πιο δύσκολη πλευρά σου ζητούσε απλώς να ακουστεί και όχι να δικαιωθεί, τι θα άλλαζε;",
+ "Δεν χρειάζεται κάθε εσωτερική αντίφαση να καταλήγει σε ενοχή. Κάποτε αρκεί να εντοπιστεί με ακρίβεια.",
+ "Ποιο χαρακτηριστικό σου αντιμετωπίζεις σαν εχθρό ενώ κάποτε προσπάθησε να σε προστατεύσει;",
+ "Η σκιά δεν είναι το χειρότερο που είμαστε· είναι και το καλό που φοβόμαστε να εκδηλώσουμε.",
+ "Κάποιο συναίσθημα γίνεται πιο επικίνδυνο όταν το ταυτίζουμε με την επόμενη πράξη.",
+ "Η αυτογνωσία δεν απαιτεί αθώωση. Απαιτεί την ικανότητα να αναγνωρίζουμε και να αλλάζουμε."
+ ],tail:["Δες τη διαφορά ανάμεσα στο κίνητρο και στο αποτέλεσμα.","Ένα όριο δεν είναι κρίση για την αξία σου.","Μπορείς να αναγνωρίσεις κάτι χωρίς να το επαναλάβεις."]},
+ persona:{label:"Περσόνα",key:["δουλει","κόσμ","φίλ","προσωπ","ρόλ","βλέπ","αναγνωρ","κοινων"],q:[
+ "Ποιος είσαι όταν δεν χρειάζεται να αποδείξεις σε κανέναν ότι είσαι εύκολος άνθρωπος;",
+ "Μερικές φορές η ευγένεια είναι επιλογή. Άλλες φορές γίνεται μια σύμβαση που δεν τολμούμε να αναθεωρήσουμε.",
+ "Πόσες φορές έχεις συμφωνήσει ενώ θα ήθελες απλώς λίγο χρόνο για να καταλάβεις;",
+ "Η περσόνα μάς βοηθά να συναντήσουμε τον κόσμο· δεν χρειάζεται να είναι ο μόνος μας τρόπος ύπαρξης.",
+ "Το να φαίνεσαι ήρεμος και το να είσαι ήρεμος είναι δύο εντελώς διαφορετικές εμπειρίες.",
+ "Ποιο μέρος της καθημερινότητάς σου δεν έχει χώρο για μια ειλικρινή παύση;"
+ ],tail:["Τι θα κρατούσες αν δεν σε παρατηρούσε κανείς;","Η προσαρμογή έχει αξία όταν δεν εξαφανίζει τις ανάγκες.","Δεν χρειάζεται να εξηγούνται τα πάντα."]},
+ dream:{label:"Όνειρο",key:["όνειρ","ύπν","νύχτ","φιλί","ξυπν","σκην","εικόν"],q:[
+ "Ένα όνειρο μπορεί να είναι συναισθηματικά ακριβές και ιστορικά ανύπαρκτο. Τι είναι αυτό που μένει το πρωί;",
+ "Αν αφαιρούσες από ένα όνειρο το σενάριό του, ποια αίσθηση θα επέμενε;",
+ "Ο ύπνος μπορεί να ανασυνθέτει όψεις της μνήμης χωρίς να μας αποκαλύπτει το μέλλον.",
+ "Υπάρχουν νυχτερινές σκηνές που δεν χρειάζονται ερμηνεία· χρειάζονται απλώς μια θέση στο ημερολόγιο.",
+ "Μερικές αφυπνίσεις ξεκινούν με τη νοσταλγία μιας εμπειρίας που δεν συνέβη στον ξύπνιο κόσμο.",
+ "Τι θα έλεγες για ένα όνειρο αν δεν επιτρεπόταν να το αντιμετωπίσεις ως μήνυμα;"
+ ],tail:["Η ένταση δεν αποτελεί απόδειξη προφητείας.","Το όνειρο ανήκει στον ονειρευόμενο.","Μια πιθανή ανάγνωση δεν είναι διάγνωση."]},
+ bond:{label:"Δεσμός",key:["αγάπ","δεσ","σχέσ","απορρι","επικοινων","απόστασ","όρι","σκέφ","καρδι","θέλ"],q:[
+ "Μπορεί μια συνάντηση να μας μεταμορφώσει χωρίς να μας ανήκει η συνέχειά της;",
+ "Η προσοχή που κάποτε λάβαμε δεν αποτελεί υπόσχεση για όλη την υπόλοιπη ζωή.",
+ "Μερικές φορές νοιαζόμαστε πραγματικά και παρ’ όλα αυτά χρειάζεται να μην κάνουμε καμία κίνηση.",
+ "Το συναίσθημα μπορεί να μένει αμετάβλητο ενώ η συμπεριφορά μαθαίνει να γίνεται προσεκτικότερη.",
+ "Ποιο μέρος μιας σχέσης αφορούσε τον άλλον και ποιο μια δυνατότητα του εαυτού που ανακαλύψαμε;",
+ "Η οικειότητα είναι πραγματική ακόμη κι όταν το νόημά της δεν είναι συμμετρικό."
+ ],tail:["Το νοιάξιμο δεν προσφέρει δικαίωμα πρόσβασης.","Η ανάμνηση δεν χρειάζεται καινούργια επιβεβαίωση.","Η αμοιβαιότητα δεν συνάγεται από την ένταση."]},
+ self:{label:"Εαυτός",key:["εαυτ","μέλλον","χρόν","μόν","αλλαγ","νόημ","πορεία","ζω","μέσα"],q:[
+ "Αν ο εαυτός δεν ήταν κάτι που πρέπει να βρεις, αλλά κάτι που εξελίσσεται, τι θα άφηνες ανοιχτό;",
+ "Ποια μικρή πράξη σήμερα δεν εξαρτάται από κανένα παλιό συμπέρασμα;",
+ "Η εξατομίκευση δεν είναι η αναζήτηση της τέλειας εκδοχής μας. Είναι η δυνατότητα να κατοικούμε και τις αντιφάσεις μας.",
+ "Δεν χρειάζεται να συμφιλιωθείς σήμερα με ολόκληρο το μέλλον.",
+ "Ποιο μέρος σου εξακολουθεί να υπάρχει όταν σταματά κάθε προσπάθεια ερμηνείας;",
+ "Μια ζωή δεν μπορεί να μετρηθεί από το αποτέλεσμα μίας μόνο ιστορίας."
+ ],tail:["Το σημερινό συναίσθημα δεν έχει πρόσβαση σε όλο το μέλλον.","Άφησε ένα μέρος ανεξήγητο.","Δεν απαιτείται λύση για να γίνει ένα μικρό βήμα."]}
+};
+var monthNames=["ΙΑΝΟΥΑΡΙΟΥ","ΦΕΒΡΟΥΑΡΙΟΥ","ΜΑΡΤΙΟΥ","ΑΠΡΙΛΙΟΥ","ΜΑΪΟΥ","ΙΟΥΝΙΟΥ","ΙΟΥΛΙΟΥ","ΑΥΓΟΥΣΤΟΥ","ΣΕΠΤΕΜΒΡΙΟΥ","ΟΚΤΩΒΡΙΟΥ","ΝΟΕΜΒΡΙΟΥ","ΔΕΚΕΜΒΡΙΟΥ"];
+function hash(s){var n=2166136261;for(var i=0;i<s.length;i++){n^=s.charCodeAt(i);n=Math.imul(n,16777619)}return n>>>0}
+function pick(a,seed){return a[seed%a.length]}
+function dateKey(){var d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()}
+function save(){if(!db.remember)return;try{localStorage.setItem(K,JSON.stringify({axis:db.axis,entries:db.entries.slice(-80),dialog:db.dialog.slice(-18),remember:true}))}catch(e){$("storedLabel").textContent="Ο ΧΩΡΟΣ ΑΠΟΘΗΚΕΥΣΗΣ ΕΙΝΑΙ ΠΛΗΡΗΣ"}}
+function chooseTopic(text){var low=(text||"").toLowerCase(),scores={};Object.keys(axes).forEach(function(a){scores[a]=axes[a].key.reduce(function(n,k){return n+(low.indexOf(k)!==-1?1:0)},0)});var names=Object.keys(scores).sort(function(a,b){return scores[b]-scores[a]});return scores[names[0]]?names[0]:db.axis}
+function updateClock(){var now=new Date();$("bigclock").textContent=String(now.getHours()).padStart(2,"0")+":"+String(now.getMinutes()).padStart(2,"0");$("dayNum").textContent=String(now.getDate()).padStart(2,"0");$("monthName").textContent=monthNames[now.getMonth()]}
+function setAxis(a){if(!axes[a])return;db.axis=a;document.querySelectorAll(".lens").forEach(function(b){var on=b.dataset.axis===a;b.classList.toggle("active",on);b.setAttribute("aria-pressed",String(on))});$("orbName").textContent=axes[a].label;showReading();save()}
+function showReading(){var a=axes[db.axis],seed=hash(dateKey()+db.axis+String(cycle)+String(db.entries.length));$("readingQ").textContent=pick(a.q,seed);$("readingNote").textContent=pick(a.tail,seed>>>4);$("signal").textContent="ΣΥΝΘΕΣΗ / "+String(++turnIndex).padStart(3,"0")+" · "+a.label.toUpperCase();$("fieldContext").textContent="Αυτή η σύνθεση προέκυψε από την ημερομηνία, τον επιλεγμένο άξονα και την τοπική ιστορία της σελίδας.";remaining=60;}
+function rotate(){cycle++;showReading()}
+function interval(){updateClock();remaining--;if(remaining<=0)rotate();$("phase").textContent="ΝΕΑ ΣΥΝΘΕΣΗ ΣΕ "+remaining+"s";$("progressTxt").textContent=String(Math.round((60-remaining)/60*100)).padStart(2,"0")+"%";$("bar").style.width=((60-remaining)/60*100)+"%"}
+function renderEntries(){var host=$("diary");host.textContent="";$("entryCount").textContent=String(db.entries.length).padStart(2,"0")+" ΚΑΤΑΓΡΑΦΕΣ";if(!db.entries.length){var e=document.createElement("p");e.className="empty";e.textContent="Το αρχείο είναι ακόμη άγραφο. Όποτε το επιλέξεις, μια σκέψη από τη συνομιλία μπορεί να αποκτήσει εδώ τη δική της ημερομηνία.";host.append(e);return}db.entries.slice(-5).reverse().forEach(function(n){var row=document.createElement("div");row.className="entry";var d=document.createElement("span");d.className="eyebrow";d.textContent=new Date(n.at).toLocaleDateString("el-GR",{day:"2-digit",month:"short",year:"numeric"});var p=document.createElement("p");p.textContent=n.text;row.append(d,p);host.append(row)})}
+function addBubble(role,body){var el=document.createElement("div");el.className="bubble";el.dataset.role=role;if(role==="assistant"){var tag=document.createElement("span");tag.className="who";tag.textContent=model?"ΕΝΔΟ · ΤΟΠΙΚΟ LLM":"ΕΝΔΟ · ΣΥΝΘΕΣΗ";el.append(tag)}el.append(document.createTextNode(body));$("messages").append(el);while($("messages").children.length>24)$("messages").firstElementChild.remove();$("messages").scrollTop=$("messages").scrollHeight;return el}
+function fallback(user){var ax=axes[chooseTopic(user)],n=hash(user+dateKey()+db.dialog.length),opening=[
+ "Ακούγεται σαν κάτι που αξίζει να εξεταστεί χωρίς βιασύνη.",
+ "Αν πάρουμε στα σοβαρά αυτή τη διατύπωση, δεν χρειάζεται να βρούμε αμέσως εξήγηση.",
+ "Μπορούμε να το παρατηρήσουμε χωρίς να το κάνουμε κανόνα για ολόκληρη τη ζωή.",
+ "Αυτό μπορεί να σημαίνει διαφορετικά πράγματα σε διαφορετικές στιγμές."
+ ],lens={
+ shadow:["Στη γλώσσα της σκιάς, ακόμη και μια δυσάρεστη παρόρμηση μπορεί να γίνει πληροφορία, όχι οδηγία.","Τι αλλάζει αν ξεχωρίσεις αυτό που αισθάνεσαι από αυτό που τελικά επιλέγεις να κάνεις;"],
+ persona:["Η περσόνα περιγράφει τους ρόλους μας, όχι όλη την ταυτότητά μας.","Ποιο μέρος αυτής της εμπειρίας θα έμενε ίδιο χωρίς τα βλέμματα των άλλων;"],
+ dream:["Τα όνειρα συνθέτουν εμπειρίες και εικόνες· δεν είναι ενδείξεις για τις προθέσεις άλλων ανθρώπων.","Αν κρατούσες μόνο το συναίσθημα της σκηνής, πώς θα το ονόμαζες;"],
+ bond:["Η ένταση που νιώθουμε δεν είναι ασφαλές μέτρο για όσα αισθάνεται κάποιος άλλος.","Πώς θα μπορούσε αυτή η φροντίδα να υπάρχει χωρίς να απαιτεί μια νέα απάντηση;"],
+ self:["Ο εαυτός δεν χρειάζεται να επιλέξει ανάμεσα στην ανάμνηση και στο παρόν.","Τι μικρό θα έκανες σήμερα αν δεν χρειαζόταν να αποφασίσεις για πάντα;"]
+ };
+ var result=pick(opening,n)+"\n\n"+lens[chooseTopic(user)][0]+"\n\n"+lens[chooseTopic(user)][1];
+ if(/αυτοκτον|να πεθαν|να βάλω τέλος|να κάνω κακό στον εαυτό/.test(user.toLowerCase()))result="Αυτό ακούγεται επείγον. Αν υπάρχει κίνδυνος να βλάψεις τον εαυτό σου, κάλεσε το 112 ή μίλησε αμέσως σε κάποιον που μπορεί να μείνει μαζί σου. Μπορούμε να κάνουμε χώρο σε όσα νιώθεις, αλλά χρειάζεται πρώτα ασφάλεια.";
+ return result
+}
+var SYSTEM="Είσαι το ΕΝΔΟ, μικρός ιδιωτικός στοχαστικός συνομιλητής εμπνευσμένος από τις έννοιες του Carl Gustav Jung (σκιά, περσόνα, όνειρα, εξατομίκευση). Δεν είσαι ο Jung, δεν έχεις συνείδηση, δεν κάνεις διάγνωση ή ψυχοθεραπεία. Μίλα ελληνικά, φυσικά, συγκεκριμένα, στοχαστικά, με ζεστή ακρίβεια, χωρίς μεγάλες βεβαιότητες, με 2-4 σύντομες παραγράφους και μία μη πιεστική ερώτηση. Απόφυγε ψεύτικα επιστημονικά ονόματα, μυστικισμό, προβλέψεις ή απόδοση σκέψεων σε τρίτους. Μην ενθαρρύνεις παραβίαση ορίων, παρακολούθηση, εξιδανίκευση ή απομόνωση. Ξεχώριζε μνήμη, συναίσθημα και πράξη. Αν εντοπίσεις επείγοντα κίνδυνο αυτοτραυματισμού, ενθάρρυνε άμεση ανθρώπινη βοήθεια και 112. Ποτέ μην ισχυρίζεσαι ότι διαβάζεις τον νου.";
+async function respond(user){if(busy)return;busy=true;$("send").disabled=true;var topic=chooseTopic(user);lastTopic=topic;addBubble("user",user);db.dialog.push({role:"user",content:user});if(db.remember){db.entries.push({text:user.slice(0,1800),at:new Date().toISOString(),axis:topic});db.entries=db.entries.slice(-80);save();renderEntries()}var out;
+ if(model){var pending=addBubble("assistant","Σκέφτομαι μαζί σου…");try{var messages=[{role:"system",content:SYSTEM}].concat(db.dialog.slice(-9));var response=await model.chat.completions.create({messages:messages,temperature:.72,max_tokens:310});out=(response.choices&&response.choices[0]&&response.choices[0].message.content||"").trim();if(!out)throw new Error("Empty response");pending.lastChild.textContent=out;}catch(e){out=fallback(user);pending.lastChild.textContent=out;$("llmState").textContent="Η τοπική παραγωγή απέτυχε · χρησιμοποιείται ο στοχαστικός μηχανισμός."}}
+ else{out=fallback(user);addBubble("assistant",out)}
+ db.dialog.push({role:"assistant",content:out});db.dialog=db.dialog.slice(-18);save();setAxis(topic);busy=false;$("send").disabled=false}
+$("send").addEventListener("click",function(){var text=$("prompt").value.trim();if(!text||busy)return;$("prompt").value="";respond(text)});
+$("prompt").addEventListener("keydown",function(e){if(e.key==="Enter"&&(e.ctrlKey||e.metaKey)){e.preventDefault();$("send").click()}});
+$("another").addEventListener("click",rotate);
+document.querySelectorAll(".lens").forEach(function(b){b.addEventListener("click",function(){setAxis(b.dataset.axis)})});
+$("remember").checked=db.remember;$("remember").addEventListener("change",function(e){db.remember=e.target.checked;if(!db.remember){try{localStorage.removeItem(K)}catch(e){}$("storedLabel").textContent="ΑΠΟΘΗΚΕΥΣΗ / ΑΠΕΝΕΡΓΟΠΟΙΗΜΕΝΗ"}else{save();$("storedLabel").textContent="ΑΠΟΘΗΚΕΥΣΗ / ΜΟΝΟ ΤΟΠΙΚΑ"}});
+$("export").addEventListener("click",function(){var blob=new Blob([JSON.stringify({exported_at:new Date().toISOString(),entries:db.entries,dialog:db.dialog},null,2)],{type:"application/json;charset=utf-8"});var url=URL.createObjectURL(blob);var a=document.createElement("a");a.href=url;a.download="endo-private-"+dateKey()+".json";a.click();setTimeout(function(){URL.revokeObjectURL(url)},4000)});
+$("clear").addEventListener("click",function(){if(!confirm("Να διαγραφούν οι σημειώσεις και ο διάλογος από αυτή τη συσκευή;"))return;db.entries=[];db.dialog=[];try{localStorage.removeItem(K);localStorage.removeItem(OLD)}catch(e){}renderEntries();$("messages").textContent="";addBubble("assistant","Το αρχείο είναι άδειο. Μπορούμε να αρχίσουμε από κάτι μικρό, χωρίς να χρειαστεί να εξηγήσουμε τα πάντα.");save()});
+$("loadLLM").addEventListener("click",async function(){if(model||busy)return;if(!("gpu" in navigator)){$("llmState").textContent="Το WebGPU δεν υποστηρίζεται σε αυτόν τον browser. Ο στοχαστικός μηχανισμός παραμένει ενεργός.";return}busy=true;this.disabled=true;$("llmState").textContent="Γίνεται φόρτωση WebLLM…";try{var lib=await import("https://esm.sh/@mlc-ai/web-llm@0.2.85");var models=lib.prebuiltAppConfig.model_list;var small=models.find(function(m){return /Qwen2-0.5B-Instruct-q4f32_1-MLC/.test(m.model_id)})||models.find(function(m){return /SmolLM2-360M-Instruct-q4f32_1-MLC/.test(m.model_id)})||models.find(function(m){return /Llama-3.2-1B-Instruct-q4f32_1-MLC/.test(m.model_id)});if(!small)throw new Error("No supported compact model");$("llmState").textContent="Λήψη μοντέλου · απαιτείται αρκετή μνήμη και σύνδεση.";model=await lib.CreateMLCEngine(small.model_id,{initProgressCallback:function(p){$("llmState").textContent="ΤΟΠΙΚΟ LLM / "+(p.text||"Φόρτωση…").slice(0,125)}});$("engineLabel").textContent="ΛΕΙΤΟΥΡΓΙΑ / ΠΡΑΓΜΑΤΙΚΟ LLM ΣΤΗ ΣΥΣΚΕΥΗ";$("llmState").textContent="Ενεργό: "+small.model_id+" · το κείμενο δεν αποστέλλεται σε server.";$("loadLLM").textContent="ΤΟΠΙΚΟ LLM ΕΝΕΡΓΟ"}catch(e){model=null;this.disabled=false;$("llmState").textContent="Αδυναμία φόρτωσης μοντέλου · "+String(e.message||"").slice(0,65)+". Παραμένει η δωρεάν τοπική σύνθεση."}finally{busy=false}});
+updateClock();renderEntries();setAxis(axes[db.axis]?db.axis:"shadow");$("phase").textContent="ΝΕΑ ΣΥΝΘΕΣΗ ΣΕ 60s";setInterval(interval,1000);
+var canvas=$("fieldCanvas"),theatre=$("theatre"),ctx=canvas.getContext("2d"),W=500,H=600,time=0,mouse={x:0,y:0},reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
+function resize(){var r=theatre.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2);W=r.width;H=r.height;canvas.width=Math.max(1,Math.round(W*dpr));canvas.height=Math.max(1,Math.round(H*dpr));ctx.setTransform(dpr,0,0,dpr,0,0)}
+if(window.ResizeObserver)new ResizeObserver(resize).observe(theatre);else addEventListener("resize",resize);resize();
+theatre.addEventListener("pointermove",function(e){var r=theatre.getBoundingClientRect();mouse.x=(e.clientX-r.left-r.width/2)/(r.width/2);mouse.y=(e.clientY-r.top-r.height/2)/(r.height/2);$("coordinates").textContent=Math.round((mouse.x+1)*90)+"° / "+Math.round((mouse.y+1)*90)+"°"});
+theatre.addEventListener("pointerleave",function(){mouse.x=0;mouse.y=0;$("coordinates").textContent="00° / 00°"});
+function draw(){if(!ctx)return;ctx.clearRect(0,0,W,H);var r=Math.min(W,H)*.325,cx=W/2+mouse.x*12,cy=H/2+mouse.y*12,seed=hash(dateKey()+db.axis),phase=time*.0035;ctx.save();ctx.translate(cx,cy);for(var ring=0;ring<12;ring++){var rr=r*(.36+ring*.072);ctx.beginPath();for(var j=0;j<=210;j++){var a=j/210*Math.PI*2,wave=Math.sin(a*(3+seed%5)+phase*(ring%2?1:-1)+ring*.47)*r*.027+Math.cos(a*7-phase*1.6+ring*.2)*r*.01;var dr=rr+wave,xx=Math.cos(a)*dr,yy=Math.sin(a)*dr*.83;if(j===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy)}ctx.closePath();ctx.strokeStyle=ring%3===0?"rgba(242,173,130,.42)":"rgba(216,190,177,.13)";ctx.lineWidth=ring%3===0?1.05:.55;ctx.stroke()}for(var i=0;i<170;i++){var a=i*2.39996+phase*(i%2?1:-1)*.17,rad=Math.sqrt((i+.5)/170)*r*1.26,x=Math.cos(a)*rad,y=Math.sin(a)*rad*.84;ctx.beginPath();ctx.arc(x,y,i%7===0?1.25:.55,0,Math.PI*2);ctx.fillStyle=i%6===0?"rgba(242,173,130,.7)":"rgba(230,228,217,.25)";ctx.fill()}ctx.beginPath();ctx.ellipse(0,0,r*.34,r*.26,0,0,Math.PI*2);ctx.fillStyle="rgba(242,173,130,.035)";ctx.fill();ctx.restore();time+=1}
+var fpsLast=0;function animate(now){if(!document.hidden&&now-fpsLast>32){draw();fpsLast=now}if(!reduced)requestAnimationFrame(animate)}if(reduced){draw();setInterval(draw,1800)}else requestAnimationFrame(animate);
+})();
+</script>
+</body></html>
