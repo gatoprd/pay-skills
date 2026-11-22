@@ -108,6 +108,23 @@ def main():
  try: urls=official_links(session)
  except Exception as e:
   print("OFFICIAL INDEX ERROR:",e,flush=True);urls={}
+ # Direct links to the eleven public official PDFs, taken from the official index.
+ # Their filenames are stable even when the files receive a later update.
+ filenames=[
+ "1.ΣΥΝΤΑΓΜΑΤΙΚΟ ΔΙΚΑΙΟ.pdf",
+ "2.ΔΙΟΙΚΗΤΙΚΟ ΔΙΚΑΙΟ.pdf",
+ "3.ΕΥΡΩΠΑΪΚΟΙ ΘΕΣΜΟΙ ΚΑΙ ΔΙΚΑΙΟ.pdf",
+ "4.ΟΙΚΟΝΟΜΙΚΕΣ ΕΠΙΣΤΗΜΕΣ.pdf",
+ "5.ΠΛΗΡΟΦΟΡΙΚΗ ΚΑΙ ΨΗΦΙΑΚΗ ΔΙΑΚΥΒΕΡΝΗΣΗ.pdf",
+ "6.ΣΥΓΧΡΟΝΗ ΙΣΤΟΡΙΑ ΤΗΣ ΕΛΛΑΔΟΣ.pdf",
+ "7.ΚΩΔΙΚΑΣ ΚΑΤΑΣΤΑΣΗΣ ΠΟΛΙΤΙΚΩΝ ΔΙΟΙΚΗΤ.ΥΠΑΛΛΗΛΩΝ ΚΑΙ ΥΠΑΛΛΗΛΩΝ ΝΠΔΔ.pdf",
+ "8.ΓΕΝΙΚΟΣ ΚΑΝΟΝΙΣΜΟΣ ΓΙΑ ΤΗΝ ΠΡΟΣΤΑΣΙΑ ΔΕΔΟΜΕΝΩΝ GDPR.pdf",
+ "9.ΔΙΟΙΚΗΣΗ ΕΠΙΧΕΙΡΗΣΕΩΝ ΚΑΙ ΟΡΓΑΝΙΣΜΩΝ.pdf",
+ "10.ΔΙΟΙΚΗΣΗ ΑΝΘΡΩΠΙΝΟΥ ΔΥΝΑΜΙΚΟΥ.pdf",
+ "11.ΚΩΔΙΚΑΣ ΣΥΜΠΕΡΙΦΟΡΑΣ ΔΗΜΟΣΙΩΝ ΥΠΑΛΛΗΛΩΝ.pdf"]
+ from urllib.parse import quote
+ for num, filename in enumerate(filenames,1):
+  urls.setdefault(num,"https://info.asep.gr/sites/default/files/2026-04/"+quote(filename))
  for n,cat in enumerate(CATS,1):
   cid,name,total,updated=cat;url=urls.get(n)
   meta=dict(id=cid,name=name,count=total,updated=updated,url=url,loaded=0)
