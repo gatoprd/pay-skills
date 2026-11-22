@@ -141,6 +141,21 @@ def main():
    print("ERROR",msg,flush=True)
    meta["error"]=str(e);data["errors"].append(msg)
   data["categories"].append(meta)
+ if not data["questions"]:
+  # Publicly verified sample from page 1 of the April 2026 official Constitutional Law PDF.
+  # Never portray this fallback as the complete question bank.
+  source="https://info.asep.gr/sites/default/files/2026-04/1.%CE%A3%CE%A5%CE%9D%CE%A4%CE%91%CE%93%CE%9C%CE%91%CE%A4%CE%99%CE%9A%CE%9F%20%CE%94%CE%99%CE%9A%CE%91%CE%99%CE%9F.pdf#page=1"
+  previews=[
+   ("Η λαϊκή κυριαρχία, στο πολίτευμά μας, είναι:",["Άγραφη αρχή","Θεμελιώδης συνταγματική αρχή","Κατώτερη από την εθνική κυριαρχία","Πάνω από το Σύνταγμα"],1),
+   ("Το Σύνταγμα:",["Έχει υπέρτερη ισχύ από τον τυπικό νόμο","Έχει την ίδια ισχύ με τον τυπικό νόμο","Είναι κατώτερο από τον τυπικό νόμο","Έχει την ίδια ισχύ με το διεθνές δίκαιο"],0),
+   ("Το πολίτευμα της Ελλάδας είναι:",["Προεδρική Δημοκρατία","Προεδρευόμενη Κοινοβουλευτική Δημοκρατία","Βασιλευόμενη Κοινοβουλευτική Δημοκρατία","Προεδρική Κοινοβουλευτική Δημοκρατία"],1),
+   ("Οι συντακτικές πράξεις:",["Έχουν αυξημένη τυπική ισχύ","Είναι παράνομες","Εκδίδονται από την αναθεωρητική Βουλή","Εκδίδονται βάσει εξουσιοδότησης απευθείας εκ του Συντάγματος"],0),
+   ("Η αντιπροσωπευτική αρχή:",["Είναι συνώνυμο της έμμεσης δημοκρατίας σήμερα","Είναι συνώνυμο της άμεσης δημοκρατίας","Δεν είναι συνώνυμο ούτε της άμεσης ούτε της έμμεσης δημοκρατίας","Σημαίνει ότι οι βουλευτές δεσμεύονται από τη γνώμη των ψηφοφόρων της περιφέρειάς τους."],0)]
+  for n,(prompt,answers,correct) in enumerate(previews,1):
+   data["questions"].append(dict(id="constitutional-"+str(n),category="constitutional",number=n,question=prompt,options=answers,correct=correct,page=1,source=source))
+  data["categories"][0]["loaded"]=5
+  data["preview"]=True
+  print("PREVIEW: 5 manually cross-checked question/answer pairs on official PDF page 1",flush=True)
  data["loaded_count"]=len(data["questions"])
  data["expected_count"]=sum(x[2] for x in CATS)
  data["complete"]=(data["loaded_count"]==data["expected_count"] and not data["errors"])
