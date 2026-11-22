@@ -105,6 +105,12 @@ def main():
  session.headers.update({"User-Agent":"Mozilla/5.0 (compatible; Independent ASEP study tool)","Accept":"text/html,application/pdf,*/*"})
  strict="--strict" in sys.argv
  data=dict(source=BASE,source_name="Μητρώο Θεμάτων Γνώσεων του ΑΣΕΠ",generated=datetime.datetime.now(datetime.timezone.utc).isoformat(),categories=[],questions=[],errors=[])
+ for probe in ("https://quizor.gr/questions/mitroo-thematon-gnoseon-asep","https://asep-exams.gr/asep-erotiseis-apantiseis","https://r.jina.ai/https://info.asep.gr/mitroo-thematon-gnoseon"):
+  try:
+   rp=session.get(probe,timeout=18)
+   print("DIAGNOSTIC",probe,rp.status_code,len(rp.content),rp.text[:350].replace("\\n"," "),flush=True)
+  except Exception as pe:
+   print("DIAGNOSTIC-ERROR",probe,str(pe)[:180],flush=True)
  try: urls=official_links(session)
  except Exception as e:
   print("OFFICIAL INDEX ERROR:",e,flush=True);urls={}
