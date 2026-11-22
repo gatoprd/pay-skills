@@ -101,6 +101,21 @@ def parse_pdf(blob,category,url):
  if [q["number"] for q in found]!=list(range(1,expected+1)):raise ValueError("Ασυνέχεια αρίθμησης")
  return found
 def main():
+ # Fully materialized, versioned question bank takes precedence over remote downloads.
+ saved = DEST / "questions.json"
+ if saved.exists():
+  existing=json.loads(saved.read_text(encoding="utf-8"))
+  qs=existing.get("questions",[])
+  ids=[q.get("id") for q in qs]
+  if (len(qs)!=1988 or len(ids)!=len(set(ids)) or
+      not all(isinstance(q.get("correct"),int) and 0<=q["correct"]<4
+              and isinstance(q.get("options"),list) and len(q["options"])==4
+              and all(isinstance(o,str) and o.strip() for o in q["options"])
+              and isinstance(q.get("question"),str) and q["question"].strip()
+              for q in qs)):
+   raise RuntimeError("INVALID PREBUILT BANK")
+  print("BANK READY: 1988 validated, unique question entries",flush=True)
+  return
  session=requests.Session()
  session.headers.update({"User-Agent":"Mozilla/5.0 (compatible; Independent ASEP study tool)","Accept":"text/html,application/pdf,*/*"})
  strict="--strict" in sys.argv
