@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#131820"><meta name="description" content="Δωρεάν ανεξάρτητη εξάσκηση στις επίσημες ερωτήσεις γνώσεων ΑΣΕΠ με άμεση διόρθωση και αναλυτικά αποτελέσματα.">
+<title>ΕΠΙΓΝΩΣΗ — Αίθουσα Γνώσεων</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap');
+:root{color-scheme:dark;--bg:#11161c;--panel:#1c232c;--border:#303a46;--ink:#eff2f2;--muted:#a2afb9;--accent:#bde1c1;--gold:#e8c798;--red:#ffb5ae;--good:#2d6049;--bad:#713b41}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse 85% 40% at 95% -5%,#263740 0,transparent 78%),var(--bg);color:var(--ink);font-family:Manrope,'DM Sans',Arial,sans-serif;line-height:1.55}button,select{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.55}a{color:var(--accent)}a:focus-visible,button:focus-visible,select:focus-visible{outline:3px solid #e8c798;outline-offset:3px}.wrap{max-width:1120px;padding:0 24px;margin:auto}header{border-bottom:1px solid #29323c;background:#131922c9;position:sticky;top:0;backdrop-filter:blur(20px);z-index:4}header .wrap{display:flex;align-items:center;justify-content:space-between;min-height:74px;gap:15px}.logo{font-size:19px;font-weight:800;color:var(--ink);letter-spacing:.14em;background:none;border:none;padding:0}.logo span{color:var(--accent)}.top-tag{font-size:11px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted)}main{padding:50px 0 70px}.eyebrow{color:var(--gold);font-size:12px;letter-spacing:.19em;font-weight:800}.hero{display:grid;grid-template-columns:1fr auto;gap:28px;align-items:end;margin:0 0 30px}h1{font-weight:800;font-size:clamp(37px,6vw,68px);letter-spacing:-.055em;line-height:1.1;margin:13px 0}h1 span{color:var(--accent)}.sub{font-size:15px;max-width:620px;color:var(--muted);margin:15px 0 0}.stat-big{text-align:right}.stat-big b{display:block;font-size:44px;letter-spacing:-.06em;line-height:1.2}.stat-big small{font-size:11px;color:var(--muted);letter-spacing:.15em}.notice{border:1px solid #536052;background:#222f2e;border-radius:12px;padding:14px 17px;font-size:13px;color:#d8ecd8;margin:20px 0 27px}.notice.warning{border-color:#685342;background:#332a25;color:#f7dbb4}.panel{border:1px solid var(--border);background:linear-gradient(145deg,#222b35,#1a222b);border-radius:19px;padding:25px;box-shadow:0 16px 70px #00000018}.panel-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:20px}.panel-title h2{margin:0;font-size:17px;letter-spacing:-.02em}.panel-title span{font-size:12px;color:var(--muted)}.setup{display:grid;grid-template-columns:minmax(0,2fr) minmax(120px,1fr) minmax(110px,1fr) auto;gap:12px;align-items:end}.field label{display:block;color:var(--muted);font-size:11px;font-weight:700;margin-bottom:9px;letter-spacing:.09em;text-transform:uppercase}.field select{border-radius:9px;background:#111820;border:1px solid #43515e;color:#f0f0f0;padding:13px 12px;width:100%;height:48px;min-width:0}.btn{border:0;padding:13px 22px;border-radius:9px;background:var(--accent);color:#10221b;font-weight:800;min-height:48px;transition:transform .15s,background .15s}.btn:hover:not(:disabled){transform:translateY(-1px);background:#d1f5d1}.btn.light{background:#303c47;color:#ebf4f4;border:1px solid #576673}.btn.light:hover:not(:disabled){background:#3b4d59}.muted-note{margin:13px 0 0;font-size:12px;color:var(--muted)}.section-heading{font-size:15px;margin:36px 0 16px}.cats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.cat{background:#1c252e;border:1px solid var(--border);text-align:left;color:inherit;padding:19px;border-radius:13px;min-height:139px;display:flex;flex-direction:column;justify-content:space-between;transition:all .15s}.cat:hover:not(:disabled){border-color:#a5ccb6;transform:translateY(-2px)}.cat.disabled{opacity:.55}.cat-row{display:flex;justify-content:space-between;color:var(--gold);font-size:12px}.cat strong{font-size:14px;font-weight:700;line-height:1.35;margin:12px 0}.cat small{font-size:11px;color:var(--muted)}.cat .full{color:var(--accent)}.history{margin-top:25px;display:flex;justify-content:space-between;gap:12px;align-items:center;color:var(--muted);font-size:13px}.history b{font-size:19px;color:var(--ink)}.hidden{display:none!important}.quiz-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.quiz-head small{color:var(--accent);letter-spacing:.07em}.quiz-head button{color:var(--muted);border:1px solid #485663;padding:9px 15px;background:transparent;border-radius:9px}.bar{height:5px;background:#35414b;overflow:hidden;border-radius:8px;margin-bottom:28px}.bar span{display:block;width:0;height:100%;background:var(--accent);transition:width .2s}.question-card{padding:35px 38px}.question-count{font-size:11px;color:var(--gold);font-weight:800;letter-spacing:.13em}.question-card h2{font-size:clamp(20px,3vw,29px);line-height:1.4;letter-spacing:-.02em;margin:18px 0 29px}.choices{display:grid;gap:11px}.choice{width:100%;text-align:left;background:#15202a;border:1px solid #3a4a55;border-radius:10px;padding:15px;display:flex;align-items:flex-start;gap:16px;color:var(--ink);line-height:1.55;min-height:58px;font-size:15px}.choice:hover:not(:disabled){border-color:#8cb5a4;background:#223239}.choice .letter{flex:none;display:flex;align-items:center;justify-content:center;border:1px solid #566470;border-radius:8px;width:32px;height:32px;color:var(--gold);font-weight:800}.choice.right{background:#234636;border-color:#74b997;opacity:1}.choice.right .letter{border-color:#aad5ba;color:#ddf9e3}.choice.wrong{background:#553139;border-color:#d68f8f;opacity:1}.choice.wrong .letter{border-color:#e8b9b9;color:#fff3f3}.choice:disabled:not(.right):not(.wrong){opacity:.56}.feedback{margin-top:20px;border:1px solid #6aab84;background:#22382d;border-radius:10px;padding:17px;color:#d2f1dc;line-height:1.7}.feedback.bad{border-color:#bb8c7d;background:#412d32;color:#ffe6e0}.feedback b{display:block;margin-bottom:3px}.question-bottom{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-top:22px}.question-bottom small{color:var(--muted)}.source{display:inline-block;margin-top:17px;font-size:12px;color:var(--muted)}.result-hero{text-align:center}.result-hero h1{font-size:44px}.ring{width:185px;height:185px;border-radius:50%;background:conic-gradient(var(--accent) var(--percent,0%),#36434a 0);display:grid;place-items:center;margin:26px auto}.ring:before{content:"";background:#1c242b;position:absolute;border-radius:50%;width:145px;height:145px}.ring b{position:relative;font-size:40px;letter-spacing:-.04em}.result-meta{display:flex;justify-content:center;gap:38px;margin:22px 0;color:var(--muted)}.result-meta b{display:block;font-size:25px;color:var(--ink)}.result-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}.review-title{font-size:19px;margin:36px 0 14px}.review{display:grid;gap:11px}.review-item{background:#1e2831;border:1px solid var(--border);border-radius:10px;padding:19px}.review-item small{color:var(--red);font-weight:700}.review-item small.good{color:var(--accent)}.review-item p{margin:9px 0;color:#d6dee1}.review-item a{font-size:12px}footer{border-top:1px solid var(--border);padding:30px 0 45px;color:var(--muted);font-size:11px}footer p{margin:5px 0}@media(max-width:900px){.setup{grid-template-columns:1fr 1fr}.setup .field:first-child{grid-column:1/-1}.hero{grid-template-columns:1fr}.stat-big{text-align:left}.cats{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:540px){.wrap{padding:0 16px}header .wrap{min-height:65px}.top-tag{font-size:9px}main{padding:28px 0 50px}.hero{gap:10px}.stat-big b{font-size:32px}.panel{padding:17px}.setup{grid-template-columns:1fr 1fr}.setup .btn{grid-column:1/-1}.cats{grid-template-columns:1fr 1fr;gap:9px}.cat{min-height:152px;padding:13px}.cat strong{font-size:12px}.question-card{padding:23px 18px}.question-bottom{flex-direction:column;align-items:stretch}.question-bottom .btn{width:100%}.history{flex-direction:column;align-items:flex-start}.result-meta{gap:21px}}
+</style></head>
+<body><header><div class="wrap"><button class="logo" id="homeLogo" aria-label="Επιστροφή στην αρχική">ΕΠΙ<span>ΓΝΩΣΗ</span></button><span class="top-tag">Ανεξάρτητη εφαρμογή εξάσκησης</span></div></header>
+<main class="wrap">
+<section id="home">
+<div class="hero"><div><div class="eyebrow">ΔΩΡΕΑΝ · ΕΠΙΣΗΜΕΣ ΠΗΓΕΣ · ΑΜΕΣΗ ΔΙΟΡΘΩΣΗ</div><h1>Η γνώση<br>θέλει <span>εξάσκηση.</span></h1><p class="sub">Επίλεξε γνωστικό αντικείμενο, απάντησε με ένα πάτημα και μάθε αμέσως αν ήταν σωστό. Στο τέλος, δες την επίδοσή σου.</p></div><div class="stat-big"><b id="available">—</b><small>ΕΠΑΛΗΘΕΥΜΕΝΕΣ ΕΡΩΤΗΣΕΙΣ</small></div></div>
+<div id="dataNotice" class="notice warning" role="status">Φόρτωση επίσημης τράπεζας ερωτήσεων…</div>
+<div class="panel"><div class="panel-title"><h2>Νέο τεστ</h2><span>Εξατομίκευσε τη μελέτη</span></div>
+<div class="setup"><div class="field"><label for="subject">Γνωστικό αντικείμενο</label><select id="subject"><option value="all">Όλες οι διαθέσιμες ενότητες</option></select></div>
+<div class="field"><label for="mode">Σειρά</label><select id="mode"><option value="random">Τυχαία</option><option value="ordered">Με τη σειρά</option><option value="wrong">Λάθη μου</option></select></div>
+<div class="field"><label for="count">Ερωτήσεις</label><select id="count"><option value="10">10</option><option value="20" selected>20</option><option value="50">50</option><option value="100">100</option><option value="all">Όλες</option></select></div><button class="btn" id="start">Έναρξη →</button></div><p class="muted-note" id="startNote">Οι σωστές απαντήσεις προκύπτουν αποκλειστικά από τις κόκκινες επισημάνσεις του πρωτότυπου PDF.</p></div>
+<h2 class="section-heading">Οι 11 ενότητες του Μητρώου</h2><div class="cats" id="categories"></div>
+<div class="panel history"><div><div>Η πρόοδός σου</div><b id="historyScore">—</b><div id="historyDetail">Η αποθήκευση γίνεται στον browser σου.</div></div><button class="btn light" id="restartHistory">Καθαρισμός ιστορικού</button></div>
+</section>
+<section id="quiz" class="hidden"><div class="quiz-head"><small id="quizSubject"></small><button id="quit">← Επιστροφή</button></div><div class="bar"><span id="progress"></span></div>
+<div class="panel question-card"><div class="question-count" id="position"></div><h2 id="prompt"></h2><div class="choices" id="choices"></div><div id="feedback" class="feedback hidden" role="status" aria-live="polite"></div>
+<div class="question-bottom"><small id="liveScore">0 σωστές · 0 λάθος</small><button class="btn" id="next" disabled>Επόμενη ερώτηση →</button></div><a id="pdfLink" class="source" target="_blank" rel="noopener noreferrer">Επιβεβαίωση στην επίσημη πηγή ↗</a></div></section>
+<section id="results" class="hidden"><div class="panel result-hero"><div class="eyebrow">Η ΑΝΑΣΚΟΠΗΣΗ ΣΟΥ</div><h1>Ολοκλήρωσες το τεστ.</h1><div class="ring" id="ring"><b id="percent">0%</b></div><p id="summary"></p><div class="result-meta"><div><b id="correct">0</b>Σωστές</div><div><b id="wrong">0</b>Λάθος</div><div><b id="answered">0</b>Σύνολο</div></div><div class="result-actions"><button class="btn" id="again">Νέο τεστ</button><button class="btn light" id="retryWrong">Επανάληψη λαθών</button></div></div><h2 class="review-title">Αναλυτική ανασκόπηση</h2><div id="review" class="review"></div></section>
+</main>
+<footer><div class="wrap"><p><strong>ΕΠΙΓΝΩΣΗ</strong> — Ανεξάρτητη εκπαιδευτική εφαρμογή τρίτου, όχι επίσημη εφαρμογή του ΑΣΕΠ. Δεν συνδέεται, δεν εγκρίνεται και δεν υποστηρίζεται από το ΑΣΕΠ.</p><p>Πηγή ερωτήσεων και απαντήσεων: <a href="https://info.asep.gr/mitroo-thematon-gnoseon" target="_blank" rel="noopener">Μητρώο Θεμάτων Γνώσεων του ΑΣΕΠ</a>. Οι ημερομηνίες τελευταίας ενημέρωσης εμφανίζονται ανά ενότητα. Η βαθμολογία αφορά προσωπική εξάσκηση και δεν αντικαθιστά τη βαθμολογία της προκήρυξης.</p></div></footer>
+<script>
+'use strict';
+const SOURCE='https://info.asep.gr/mitroo-thematon-gnoseon',LETTERS=['α','β','γ','δ'],KEY='epignosi-progress-v3';
+let bank=null,session=null;
+const el=id=>document.getElementById(id),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=n=>Number(n||0).toLocaleString('el-GR');
+function progress(){try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch{return {}}}
+function save(p){try{localStorage.setItem(KEY,JSON.stringify(p))}catch{}}
+function catName(id){return (bank.categories.find(c=>c.id===id)||{}).name||id}
+function view(id){['home','quiz','results'].forEach(x=>el(x).classList.toggle('hidden',x!==id));scrollTo({top:0,behavior:'instant'})}
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function renderHome(){
+ const by={};bank.questions.forEach(q=>by[q.category]=(by[q.category]||0)+1);
+ el('available').textContent=fmt(bank.loaded_count);
+ el('dataNotice').className='notice'+(bank.complete?'':' warning');
+ el('dataNotice').textContent=bank.complete?'✓ Πλήρης συλλογή: '+fmt(bank.loaded_count)+' ερωτήσεις με επαληθευμένες σωστές απαντήσεις από τα 11 επίσημα PDF.':'⚠ Διαθέσιμες '+fmt(bank.loaded_count)+' από '+fmt(bank.expected_count)+' επίσημες ερωτήσεις. Δεν προβάλλονται ενότητες που δεν πέρασαν τον έλεγχο των απαντήσεων.';
+ const select=el('subject');const old=select.value;select.innerHTML='<option value="all">Όλες οι διαθέσιμες ενότητες</option>';
+ const root=el('categories');root.replaceChildren();
+ bank.categories.forEach((c,i)=>{
+  const loaded=by[c.id]||0;
+  const opt=document.createElement('option');opt.value=c.id;opt.textContent=c.name+' ('+loaded+'/'+c.count+')';opt.disabled=!loaded;select.appendChild(opt);
+  const button=document.createElement('button');button.className='cat'+(!loaded?' disabled':'');button.disabled=!loaded;
+  button.innerHTML='<div class="cat-row"><span>'+String(i+1).padStart(2,'0')+'</span><span>↗</span></div><strong>'+esc(c.name)+'</strong><small class="'+(loaded===c.count?'full':'')+'">'+fmt(loaded)+' / '+fmt(c.count)+' · Ενημ. '+esc(c.updated)+'</small>';
+  button.onclick=()=>{select.value=c.id;startQuiz()};root.appendChild(button);
+ });if([...select.options].some(x=>x.value===old&&!x.disabled))select.value=old;
+ const p=progress(),items=Object.values(p),attempts=items.reduce((a,b)=>a+b.attempts,0),correct=items.reduce((a,b)=>a+b.correct,0);
+ el('historyScore').textContent=attempts?Math.round(correct/attempts*100)+'%':'—';el('historyDetail').textContent=attempts?fmt(correct)+' σωστές στις '+fmt(attempts)+' συνολικές προσπάθειες':'Η αποθήκευση γίνεται στον browser σου.';
+}
+function startQuiz(forceWrong=false){
+ const sub=el('subject').value;let list=bank.questions.filter(q=>sub==='all'||q.category===sub);
+ const mode=forceWrong?'wrong':el('mode').value;
+ if(mode==='wrong'){let p=progress();list=list.filter(q=>p[q.id]&&p[q.id].lastCorrect===false)}
+ if(mode==='random'||mode==='wrong')list=shuffle(list);
+ else list.sort((a,b)=>bank.categories.findIndex(c=>c.id===a.category)-bank.categories.findIndex(c=>c.id===b.category)||a.number-b.number);
+ const count=el('count').value;if(count!=='all')list=list.slice(0,Math.min(list.length,+count));
+ if(!list.length){el('startNote').textContent='Δεν υπάρχουν διαθέσιμες ερωτήσεις για αυτήν την επιλογή.';view('home');return}
+ session={list,index:0,answers:[],right:0,wrong:0,selected:null};
+ view('quiz');renderQuestion();
+}
+function renderQuestion(){
+ const q=session.list[session.index],total=session.list.length;
+ session.selected=null;el('quizSubject').textContent=catName(q.category);el('position').textContent='ΕΡΩΤΗΣΗ '+(session.index+1)+' / '+total+' · ΑΡ. '+q.number;
+ el('prompt').textContent=q.question;el('pdfLink').href=q.source||SOURCE;el('progress').style.width=(session.index/total*100)+'%';
+ el('feedback').className='feedback hidden';el('feedback').textContent='';
+ el('next').disabled=true;el('next').textContent=session.index===total-1?'Προβολή αποτελέσματος →':'Επόμενη ερώτηση →';
+ el('liveScore').textContent=session.right+' σωστές · '+session.wrong+' λάθος';
+ const choices=el('choices');choices.replaceChildren();
+ q.options.forEach((option,i)=>{const button=document.createElement('button');button.type='button';button.className='choice';
+ button.innerHTML='<span class="letter">'+LETTERS[i]+'</span><span>'+esc(option)+'</span>';
+ button.onclick=()=>answer(i);choices.appendChild(button)});
+}
+function answer(i){
+ if(!session||session.selected!==null)return;
+ const q=session.list[session.index];if(!Number.isInteger(q.correct)||q.correct<0||q.correct>3)return;
+ session.selected=i;const good=i===q.correct;session[good?'right':'wrong']++;
+ session.answers.push({q,selected:i,good});
+ const p=progress();const previous=p[q.id]||{attempts:0,correct:0,wrong:0};previous.attempts++;previous[good?'correct':'wrong']++;previous.lastCorrect=good;p[q.id]=previous;save(p);
+ [...el('choices').children].forEach((b,j)=>{b.disabled=true;if(j===q.correct)b.classList.add('right');if(j===i&&!good)b.classList.add('wrong')});
+ const fb=el('feedback');fb.className='feedback'+(good?'':' bad');
+ fb.innerHTML=good?'<b>✓ Σωστή απάντηση!</b>Επέλεξες τη σωστή απάντηση του επίσημου Μητρώου.':'<b>✕ Λάθος απάντηση.</b>Η σωστή είναι η <strong>'+LETTERS[q.correct]+'. '+esc(q.options[q.correct])+'</strong>';
+ el('next').disabled=false;el('progress').style.width=((session.index+1)/session.list.length*100)+'%';
+ el('liveScore').textContent=session.right+' σωστές · '+session.wrong+' λάθος';
+}
+function next(){
+ if(!session||session.selected===null)return;
+ if(session.index===session.list.length-1){results();return}
+ session.index++;renderQuestion();scrollTo({top:0,behavior:'smooth'});
+}
+function results(){
+ view('results');const total=session.answers.length,pct=Math.round(session.right/total*100);
+ el('percent').textContent=pct+'%';el('ring').style.setProperty('--percent',pct+'%');
+ el('correct').textContent=session.right;el('wrong').textContent=session.wrong;el('answered').textContent=total;
+ el('summary').textContent='Απάντησες σωστά σε '+session.right+' από '+total+' ερωτήσεις.';el('retryWrong').disabled=session.wrong===0;
+ const review=el('review');review.replaceChildren();
+ session.answers.slice().sort((a,b)=>a.good-b.good).forEach(({q,selected,good})=>{
+ const div=document.createElement('div');div.className='review-item';
+ div.innerHTML='<small class="'+(good?'good':'')+'">'+(good?'✓ ΣΩΣΤΟ':'✕ ΛΑΘΟΣ')+' · '+esc(catName(q.category))+' · #'+q.number+'</small><p><b>'+esc(q.question)+'</b></p>'+(good?'':'<p>Η απάντησή σου: '+LETTERS[selected]+'. '+esc(q.options[selected])+'</p>')+'<p>Σωστή: <strong>'+LETTERS[q.correct]+'. '+esc(q.options[q.correct])+'</strong></p><a target="_blank" rel="noopener noreferrer" href="'+esc(q.source||SOURCE)+'">Έλεγχος στο επίσημο PDF ↗</a>';
+ review.appendChild(div)
+ });
+ renderHome();
+}
+async function init(){
+ try{const r=await fetch('questions.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const b=await r.json();
+ if(!Array.isArray(b.questions)||!Array.isArray(b.categories)||b.loaded_count!==b.questions.length||new Set(b.questions.map(q=>q.id)).size!==b.questions.length)throw Error('Ασυνέπεια δεδομένων');
+ if(!b.questions.every(q=>q&&typeof q.question==='string'&&q.question.length>0&&Array.isArray(q.options)&&q.options.length===4&&q.options.every(v=>typeof v==='string'&&v.length>0)&&Number.isInteger(q.correct)&&q.correct>=0&&q.correct<4))throw Error('Αμφίβολες απαντήσεις');
+ bank=b;
+ }catch(e){bank={loaded_count:0,expected_count:1988,questions:[],complete:false,categories:[],errors:[String(e)]}}
+ renderHome();
+}
+el('homeLogo').onclick=()=>{view('home');renderHome()};
+el('start').onclick=()=>startQuiz();
+el('next').onclick=next;
+el('quit').onclick=()=>{view('home');renderHome()};
+el('again').onclick=()=>{view('home');renderHome()};
+el('retryWrong').onclick=()=>{view('home');el('subject').value='all';el('mode').value='wrong';startQuiz(true)};
+el('restartHistory').onclick=()=>{if(confirm('Να διαγραφεί το ιστορικό προόδου αυτού του browser;')){localStorage.removeItem(KEY);renderHome()}};
+document.addEventListener('keydown',e=>{if(el('quiz').classList.contains('hidden')||e.altKey||e.ctrlKey||e.metaKey||['SELECT','INPUT','TEXTAREA'].includes(document.activeElement.tagName))return;if(/^[1-4]$/.test(e.key))answer(+e.key-1);if(e.key==='Enter'&&session&&session.selected!==null){e.preventDefault();next()}});
+init();
+</script></body></html>
