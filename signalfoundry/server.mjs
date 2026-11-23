@@ -1,5 +1,5 @@
 import http from "node:http";
-import { randomUUID, createHmac, timingSafeEqual } from "node:crypto";
+import { randomUUID, createHash, createHmac, timingSafeEqual } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
@@ -218,7 +218,9 @@ async function createOrder(itemId) {
   const item = runtime.items.find(x => x.id === itemId);
   if (!item) throw Error("The selected opportunity is no longer present");
   const nonce = randomUUID().slice(0,18);
-  const state = signed({ id:item.id,nonce,exp:Date.now() + 1000*60*60*2 });
+  const key = createHash("sha256").update(item.id).digest("hex").slice(0,20);
+  const clear = key + "." + Math.floor(Date.now()/1000).toString(36) + "." + nonce.slice(0,8);
+  const state = clear + "." + createHmac("sha256",PAYPAL.signing).update(clear).digest("base64url").slice(0,30);
   const body = {
     intent:"CAPTURE",
     purchase_units:[{ reference_id:"bidbrief", custom_id:state, amount:{currency_code:"EUR",value:PRICE}, description:"SignalForge — Procurement preparation brief" }],
@@ -233,18 +235,26 @@ async function captureOrder(orderId) {
   if (!isCheckoutReady() || !/^[A-Z0-9]{10,30}$/.test(orderId)) throw Error("Invalid order");
   const order = await paypalCall("/v2/checkout/orders/" + orderId,"GET");
   const unit = order.purchase_units?.[0];
-  const state = verified(unit?.custom_id);
-  if (!state || unit?.reference_id !== "bidbrief") throw Error("Unverified order origin");
+  const parts = String(unit?.custom_id||"").split(".");
+  if (parts.length !== 4) throw Error("Invalid order marker");
+  const clear = parts.slice(0,3).join(".");
+  const expected = createHmac("sha256",PAYPAL.signing).update(clear).digest("base64url").slice(0,30);
+  const left=Buffer.from(parts[3]),right=Buffer.from(expected);
+  if(left.length!==right.length||!timingSafeEqual(left,right))throw Error("Unverified order origin");
+  const age=Date.now()/1000-parseInt(parts[1],36);
+  if(!Number.isFinite(age)||age<0||age>7200)throw Error("Order marker expired");
+  if (unit?.reference_id !== "bidbrief") throw Error("Unverified order origin");
+  const item = runtime.items.find(x=>createHash("sha256").update(x.id).digest("hex").slice(0,20)===parts[0]);
+  if(!item)throw Error("Product no longer available for delivery; contact support with the PayPal order reference");
   if (unit.amount?.value !== PRICE || unit.amount?.currency_code !== "EUR") throw Error("Order price mismatch");
-  if (unit.payee?.email_address && unit.payee.email_address.toLowerCase() !== PAYPAL.merchant) throw Error("Merchant mismatch");
+  if (!unit.payee?.email_address || unit.payee.email_address.toLowerCase() !== PAYPAL.merchant) throw Error("Verified seller email is required");
   if (order.status === "APPROVED") await paypalCall("/v2/checkout/orders/" + orderId + "/capture","POST",null,orderId + "-sf1");
   const updated = await paypalCall("/v2/checkout/orders/" + orderId,"GET");
   const pu = updated.purchase_units?.[0];
   const capture = pu?.payments?.captures?.[0];
   if (updated.status !== "COMPLETED" || capture?.status !== "COMPLETED" || capture.amount?.value !== PRICE || capture.amount?.currency_code !== "EUR") throw Error("PayPal has not confirmed a complete capture");
   if (capture.seller_receivable_breakdown == null) { /* Still rely on PayPal capture status, not client redirects. */ }
-  if (!runtime.items.some(x=>x.id===state.id)) throw Error("The report is no longer available; contact support with PayPal receipt");
-  return signed({ id:state.id, exp:Date.now()+30*86400000, orderId, paid:true });
+  return signed({ item, exp:Date.now()+30*86400000, orderId, paid:true });
 }
 function bodyJson(req, max = 8000) {
   return new Promise((resolve, reject) => {
@@ -291,7 +301,7 @@ async function handler(req,res) {
    }
    if (route === "/api/brief") {
      await maybeRefresh();
-     const item=runtime.items.find(x=>x.id===url.searchParams.get("id"));return item?json(res,200,{preview:true,item,report:report(item)}):json(res,404,{error:"Opportunity not present in current source snapshot"});
+     const item=runtime.items.find(x=>x.id===url.searchParams.get("id"));return item?json(res,200,{preview:true,item,explanation:item.explanation,reportAvailability:paymentStatus()}):json(res,404,{error:"Opportunity not present in current source snapshot"});
    }
    if (route === "/api/commerce") return json(res,200,paymentStatus());
    if (route === "/api/pay/create"&&req.method==="POST") {
@@ -312,8 +322,8 @@ async function handler(req,res) {
    if (route==="/purchase/report") {
      const claims=verified(url.searchParams.get("receipt")||"");
      if (!claims||!claims.paid) return html(res,403,webPage("Απαιτείται επιβεβαιωμένη πληρωμή","<h1>Δεν υπάρχει ενεργή απόδειξη αγοράς.</h1>"));
-     const item=runtime.items.find(x=>x.id===claims.id);
-     if(!item)return html(res,409,webPage("Η αναφορά χρειάζεται ανάκτηση","<h1>Η εγγραφή δεν υπάρχει στο τρέχον στιγμιότυπο.</h1><p>Το PayPal έδωσε αποδεικτικό αγοράς. Επικοινώνησε με υποστήριξη παραθέτοντας το Order ID: "+sec(claims.orderId)+"</p>"));
+     const item=claims.item;
+     if(!item||!item.title||!item.deadline)return html(res,409,webPage("Εσφαλμένη απόδειξη","<h1>Η επιβεβαιωμένη αναφορά δεν μπορεί να ανακτηθεί.</h1>"));
      return html(res,200,webPage("Αναφορά προετοιμασίας",makeBriefHtml(item,true)));
    }
    if (route === "/robots.txt"){res.writeHead(200,{"content-type":"text/plain; charset=utf-8"});return res.end("User-agent: *\nAllow: /\nSitemap: "+ORIGIN+"/sitemap.xml\n")}
