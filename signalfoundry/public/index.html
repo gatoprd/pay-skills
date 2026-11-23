@@ -162,6 +162,48 @@ const date=x=>x?new Date(x).toLocaleDateString("el-GR"):"Άγνωστη";
 let market=null,chosen=null,matching=[];
 function notice(t,type){$("notice").textContent=t;$("notice").className="notice"+(type?" "+type:"")}
 function make(tag,text,cls){let e=document.createElement(tag);if(text!==null)e.textContent=text;if(cls)e.className=cls;return e}
+const normalizeSearch=s=>String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase("el-GR").replace(/\s+/g," ").trim();
+function getMatchingTerms(){
+ const terms=$("businessTerms").value.split(/[,;\n]+/).map(v=>v.trim()).filter(Boolean).slice(0,12);
+ return [...new Set(terms.map(normalizeSearch))].filter(v=>v.length>=3&&v.length<=55);
+}
+function saveLocal(){
+ try{localStorage.setItem("signalforge_terms_v1",$("businessTerms").value.slice(0,600));localStorage.setItem("signalforge_budget_v1",$("minBudget").value)}catch{}
+}
+function runMatching(){
+ const out=$("matchResults");out.replaceChildren();matching=[];saveLocal();
+ if(!market?.items?.length){out.textContent="Δεν υπάρχουν διαθέσιμες επιβεβαιωμένες εγγραφές στο τρέχον δείγμα."; $("exportMatches").disabled=true;return}
+ const terms=getMatchingTerms();
+ if(!terms.length){out.textContent="Πρόσθεσε τουλάχιστον μία συγκεκριμένη λέξη-κλειδί, με 3 ή περισσότερους χαρακτήρες."; $("exportMatches").disabled=true;return}
+ const min=Number($("minBudget").value)||0;
+ matching=market.items.map(item=>{
+  if(item.amount!=null&&item.amount<min)return null;
+  if(min>0&&item.amount==null)return null;
+  const title=normalizeSearch(item.title+" "+(item.cpv||[]).join(" "));
+  const found=terms.filter(t=>title.includes(t)||t.split(" ").filter(Boolean).every(w=>w.length>=3&&title.includes(w)));
+  return found.length?{item,found}:null;
+ }).filter(Boolean).sort((a,b)=>b.found.length-a.found.length||b.item.score-a.item.score).slice(0,50);
+ const heading=make("div",matching.length+" πιθανές θεματικές αντιστοιχίσεις · Δεν αποτελούν απόδειξη επιλεξιμότητας.");out.append(heading);
+ if(!matching.length)out.append(make("p","Καμία αντιστοίχιση στο συγκεκριμένο περιορισμένο δείγμα. Δοκίμασε πιο συγκεκριμένες λέξεις, μικρότερο προϋπολογισμό ή δες την πλήρη πηγή."));
+ for(const entry of matching.slice(0,20)){
+  const line=make("div",null,"match-item");
+  const details=make("div");details.append(make("strong",entry.item.title),make("p","Ταίριαξαν: "+entry.found.join(", ")+" · "+entry.item.buyer+" · "+date(entry.item.deadline)));
+  const link=make("a","Δες την ανάλυση ↗");link.href="#preview";link.onclick=(e)=>{e.preventDefault();preview(entry.item)};
+  line.append(details,link);out.append(line);
+ }
+ $("exportMatches").disabled=!matching.length;
+}
+function exportMatches(){
+ if(!matching.length)return;
+ const esc=v=>'"'+String(v??"").replace(/"/g,'""')+'"';
+ const lines=[["OCID","Τίτλος","Φορέας","Προθεσμία","Αξία (EUR)","Κοινά σημεία","Δημόσια πηγή"].map(esc).join(";")];
+ for(const {item,found} of matching){
+  lines.push([item.id,item.title,item.buyer,item.deadline,item.amount??"",found.join(", "),item.official?.[0]||item.source].map(esc).join(";"));
+ }
+ const blob=new Blob(["\ufeff",lines.join("\r\n")],{type:"text/csv;charset=utf-8"});
+ const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="SignalForge_supplier_matches.csv";document.body.append(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(a.href),1500);
+}
 function render(items){
  const cards=$("cards");cards.replaceChildren();$("empty").hidden=items.length>0;$("count").textContent=items.length.toLocaleString("el-GR");
  items.forEach(x=>{
@@ -183,6 +225,7 @@ async function refresh(){
   if(!market.successAt)notice("Δεν επιβεβαιώθηκε πρόσφατη πρόσβαση στην εξωτερική πηγή. Δεν εμφανίζονται κατασκευασμένες ευκαιρίες. Λεπτομέρειες: "+(market.errors||[]).join(" · "),"warn");
   else notice("Ανακτήθηκαν "+Number(market.scanned||0).toLocaleString("el-GR")+" εγγραφές για επαλήθευση, από "+Number(market.items?.length||0).toLocaleString("el-GR")+" εμφανιζόμενες ευκαιρίες. Το δείγμα δεν καλύπτει υποχρεωτικά ολόκληρη την αγορά."+(market.partialDays?" Ορισμένες ημέρες έχουν επιπλέον μη ανακτημένες σελίδες.":""),"");
   render(market.items||[]);
+  if(getMatchingTerms().length)runMatching();
   if(chosen){$("purchase").disabled=!market.checkout.active;$("checkoutNotice").hidden=market.checkout.active}
  }catch(e){notice("Το σύστημα δεν μπορεί να ανακτήσει δεδομένα αυτή τη στιγμή: "+e.message,"error");$("cards").replaceChildren();$("empty").hidden=false}
 }
@@ -197,6 +240,8 @@ async function purchase(){
  const b=$("purchase");b.disabled=true;b.textContent="Ασφαλής σύνδεση στο PayPal…";
  try{const r=await fetch("/api/pay/create",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({id:chosen.id})});const data=await r.json();if(!r.ok||!data.approve)throw Error(data.error||"Δεν δημιουργήθηκε παραγγελία");window.location.assign(data.approve)}catch(e){b.disabled=false;b.textContent="Πλήρης αναφορά · 9,90 €";$("checkoutNotice").hidden=false;$("checkoutNotice").textContent="Η πληρωμή δεν ξεκίνησε: "+e.message+". Δεν έχει γίνει χρέωση."}
 }
+try{$("businessTerms").value=localStorage.getItem("signalforge_terms_v1")||"";const b=localStorage.getItem("signalforge_budget_v1");if(b&&Array.from($("minBudget").options).some(o=>o.value===b))$("minBudget").value=b}catch{}
+$("runMatcher").onclick=runMatching;$("exportMatches").onclick=exportMatches;$("businessTerms").addEventListener("change",saveLocal);$("minBudget").onchange=runMatching;
 $("searchBtn").onclick=refresh;$("query").addEventListener("keydown",e=>{if(e.key==="Enter")refresh()});$("sector").onchange=refresh;$("purchase").onclick=purchase;
 fetch("/api/agents").then(r=>r.json()).then(data=>{$("agentStatus").textContent="Κύκλοι λειτουργίας: "+data.stats.cycles+" · Πηγή: "+(data.stats.sourceSuccess?"επιτυχής λήψη":"μη επιβεβαιωμένη λήψη")+" · PayPal: "+(data.checkout.active?"αυθεντικοποιημένο":"απενεργοποιημένο έως πραγματική σύνδεση εμπόρου")}).catch(()=>{$("agentStatus").textContent="Η κατάσταση των agents δεν είναι προσωρινά διαθέσιμη."});
 refresh();
