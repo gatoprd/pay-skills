@@ -73,6 +73,17 @@ h1 em{font-family:Fraunces,serif;font-weight:500;color:var(--mint)}
 .cardfooter a{font-size:11px;text-decoration:none;color:var(--mint)}
 .cardfooter button{min-height:39px;font-size:10px;padding:9px 12px}
 #empty{padding:30px;text-align:center;border-radius:12px;border:1px dashed #527177;color:#b0c6c5;font-size:13px}
+.matcher{background:#102832;border:1px solid #639a806c;border-radius:18px;padding:24px;margin:0 0 25px}
+.matcher h3{font:500 24px Fraunces,serif;margin:0 0 7px;letter-spacing:-.04em}
+.matcher p{font-size:12px;color:#b8caca;line-height:1.85;max-width:900px}
+.matchfields{display:grid;grid-template-columns:1fr 180px;gap:12px;margin-top:14px}
+.matchfields textarea,.matchfields select{background:#0b1a26;color:#e4f4e9;border:1px solid #5b7d80;border-radius:10px;padding:13px 14px;font:12px/1.65 Manrope,sans-serif;width:100%;min-width:0}
+.matchfields textarea{resize:vertical;min-height:86px}.matchfields label{display:flex;flex-direction:column;gap:7px;color:#a9bfc1;font-size:11px}
+.match-actions{display:flex;gap:10px;margin-top:13px;flex-wrap:wrap;align-items:center}.match-actions small{font-size:10px;color:#a6bfc3}
+.match-results{margin-top:16px;border-top:1px solid #587d7288;padding-top:14px;font-size:12px;color:#d9eee4}
+.match-item{display:flex;gap:14px;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid #4d6a673b}
+.match-item p{margin:3px 0;color:#a0bac0;font-size:11px}.match-item a{white-space:nowrap;font-size:11px}
+@media(max-width:570px){.matchfields{grid-template-columns:1fr}.matcher{padding:17px}.match-item{display:block}.match-item a{display:inline-block;margin-top:5px}}
 #preview{margin-top:22px;border:1px solid #57756e;background:#122932;border-radius:18px;padding:26px;position:relative}
 #preview h3{font:500 27px Fraunces,serif;letter-spacing:-.03em;margin:5px 0 13px}
 #preview p{font-size:13px;color:#d2e0db;line-height:1.85}
@@ -107,6 +118,27 @@ h1 em{font-family:Fraunces,serif;font-weight:500;color:var(--mint)}
   <div class="search"><input id="query" maxlength="80" aria-label="Αναζήτηση" placeholder="Λέξη, φορέας ή κωδικός CPV…"><select id="sector" aria-label="Τομέας"><option value="">Όλοι οι τομείς</option></select><button class="btn" id="searchBtn">Αναζήτηση ↗</button></div>
   <div id="notice" class="notice" role="status">Συγχρονισμός δημόσιων δεδομένων…</div>
   <div class="stats"><div class="stat"><small>ΤΕΚΜΗΡΙΩΜΕΝΕΣ ΕΓΓΡΑΦΕΣ</small><b id="count">—</b></div><div class="stat"><small>ΕΛΕΓΧΘΗΚΑΝ</small><b id="scanned">—</b></div><div class="stat"><small>ΤΟΜΕΙΣ</small><b id="sectors">8</b></div><div class="stat"><small>ΧΡΗΜΑΤΟΟΙΚΟΝΟΜΙΚΟΣ ΦΟΡΕΑΣ</small><b>Ελλάδα</b></div></div>
+  <div class="matcher" id="matcher">
+    <div class="sectionover">ΠΡΟΣΩΠΙΚΟΣ MATCHING AGENT · ΜΟΝΟ ΣΤΗ ΣΥΣΚΕΥΗ ΣΟΥ</div>
+    <h3>Τι μπορεί να πουλήσει η επιχείρησή σου;</h3>
+    <p>Περιέγραψε με λέξεις-κλειδιά τα προϊόντα ή τις υπηρεσίες σου. Ο Matching Agent θα τα συγκρίνει με τις διαθέσιμες δημοσιευμένες ευκαιρίες. Οι λέξεις-κλειδιά αποθηκεύονται μόνο στη συσκευή σου και δεν αποστέλλονται στον server.</p>
+    <div class="matchfields">
+      <label>Λέξεις-κλειδιά, χωρισμένες με κόμμα ή νέα γραμμή
+        <textarea id="businessTerms" maxlength="600" placeholder="Παράδειγμα: λογισμικό, υπηρεσίες IT, συντήρηση υπολογιστών" aria-label="Λέξεις κλειδιά επιχείρησης"></textarea>
+      </label>
+      <label>Ελάχιστος προϋπολογισμός
+        <select id="minBudget" aria-label="Ελάχιστος προϋπολογισμός">
+          <option value="0">Όλα τα ποσά</option>
+          <option value="1000">Από 1.000 €</option>
+          <option value="5000">Από 5.000 €</option>
+          <option value="20000">Από 20.000 €</option>
+          <option value="100000">Από 100.000 €</option>
+        </select>
+      </label>
+    </div>
+    <div class="match-actions"><button id="runMatcher" class="btn">Βρες σχετικές ευκαιρίες ↗</button><button id="exportMatches" class="btn light" disabled>Εξαγωγή CSV ↓</button><small>Ενδεικτική αντιστοίχιση κειμένου, όχι έλεγχος επιλεξιμότητας.</small></div>
+    <div class="match-results" id="matchResults" aria-live="polite">Συμπλήρωσε τα προϊόντα ή τις υπηρεσίες σου για να δεις εξατομικευμένες προτάσεις.</div>
+  </div>
   <div class="cards" id="cards"></div><div id="empty" hidden>Δεν βρέθηκαν επιβεβαιωμένες καταχωρίσεις για αυτή την επιλογή στο πρόσφατο δείγμα. Δοκίμασε διαφορετικό τομέα ή έλεγξε την επίσημη πηγή. Δεν κατασκευάζουμε αποτελέσματα.</div>
   <div id="preview" hidden><div class="sectionover">SOURCE-GROUNDED BRIEF</div><h3 id="pTitle">—</h3><p id="pDetails">—</p><ol id="pChecklist"></ol><div class="preview-actions"><a id="officialLink" href="https://diavgis.gr" target="_blank" rel="noopener" class="btn light">Δες την πηγή ↗</a><button id="purchase" class="btn" disabled>Πλήρης αναφορά · 9,90 €</button></div><p id="checkoutNotice" hidden>Η έκδοση παραμένει δωρεάν: δεν έχουν ενεργοποιηθεί επαληθευμένα διαπιστευτήρια PayPal για αυτή την υπηρεσία. Δεν πραγματοποιείται χρέωση.</p></div>
   <p class="agents-note">Ανεξάρτητη εφαρμογή τρίτου, όχι κυβερνητική υπηρεσία. Στοιχεία Diavgis (ΚΗΜΔΗΣ, Διαύγεια, TED), CC BY 4.0. Το δείγμα μπορεί να μην περιλαμβάνει όλες τις προκηρύξεις και δεν υποκαθιστά τον επίσημο έλεγχο των εγγράφων.</p>
@@ -127,7 +159,7 @@ h1 em{font-family:Fraunces,serif;font-weight:500;color:var(--mint)}
 const $=id=>document.getElementById(id);
 const euro=x=>Number(x).toLocaleString("el-GR",{style:"currency",currency:"EUR"});
 const date=x=>x?new Date(x).toLocaleDateString("el-GR"):"Άγνωστη";
-let market=null,chosen=null;
+let market=null,chosen=null,matching=[];
 function notice(t,type){$("notice").textContent=t;$("notice").className="notice"+(type?" "+type:"")}
 function make(tag,text,cls){let e=document.createElement(tag);if(text!==null)e.textContent=text;if(cls)e.className=cls;return e}
 function render(items){
