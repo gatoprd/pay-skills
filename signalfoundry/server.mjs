@@ -60,7 +60,9 @@ function extractCpv(tender) {
   };
   add(tender?.mainProcurementCategory?.id);
   add(tender?.classification?.id);
-  for (const el of [...(tender?.additionalClassifications || []), ...(tender?.items || []).flatMap(x => [x.classification, ...(x.additionalClassifications || [])])]) add(el?.id);
+  const additional = Array.isArray(tender?.additionalClassifications) ? tender.additionalClassifications : [];
+  const items = Array.isArray(tender?.items) ? tender.items : [];
+  for (const el of [...additional, ...items.flatMap(x => [x?.classification, ...(Array.isArray(x?.additionalClassifications) ? x.additionalClassifications : [])])]) add(el?.id);
   return [...new Set(arr)].slice(0, 8);
 }
 function categorize(title, cpv) {
@@ -78,6 +80,7 @@ function stage(tender, now = Date.now()) {
 export function normalizeRelease(release, now = Date.now()) {
   if (!release || typeof release !== "object" || !release.tender || !release.ocid) return null;
   const t = release.tender;
+  if (Array.isArray(release.tag) && release.tag.length && release.tag.every(tag => !["tender", "tenderUpdate", "tenderAmendment"].includes(tag))) return null;
   const time = stage(t, now);
   // A tender is presented as active only with a verifiably future deadline.
   if (!time.live || (t.status && t.status !== "active" && t.status !== "planning")) return null;
@@ -89,7 +92,7 @@ export function normalizeRelease(release, now = Date.now()) {
   const id = safeText(release.ocid).slice(0, 160);
   if (!id.startsWith("ocds-")) return null;
   let official = [];
-  for (const d of t.documents || []) {
+  for (const d of (Array.isArray(t.documents) ? t.documents : [])) {
     try { const u = new URL(d.url); if (u.protocol === "https:") official.push(u.toString()); } catch {}
   }
   const cat = categorize(title, cpv);
@@ -113,42 +116,94 @@ export function mergeReleases(releases, now = Date.now()) {
   }
   return [...dedup.values()].sort((a, b) => b.score - a.score || a.daysLeft - b.daysLeft || a.title.localeCompare(b.title, "el")).slice(0, 250);
 }
+const SCAN_DAYS = Object.freeze([1, 2, 3, 5, 8, 14, 21]);
+const MAX_PAGES_PER_DAY = 3;
+const MAX_RELEASES_PER_CYCLE = 24000;
+function validatePageUrl(raw, day, previous) {
+  let u;
+  try { u = new URL(String(raw), previous); } catch { throw new Error("invalid pagination link"); }
+  const expectedPath = "/ocds/releases/" + day;
+  if (u.protocol !== "https:" || u.hostname !== "api.diavgis.gr" || u.port || u.username || u.password || u.pathname !== expectedPath || u.hash) {
+    throw new Error("pagination link points outside the authorized public OCDS day");
+  }
+  if (u.search.length > 1500) throw new Error("pagination cursor too large");
+  return u.href;
+}
 async function fetchLimited(url) {
-  const response = await fetch(url, { headers: { accept: "application/json", "user-agent": "SignalForgeGR/1.0 (+https://signalforge-gr.onrender.com)" }, signal: AbortSignal.timeout(16000) });
+  const response = await fetch(url, {
+    headers: { accept: "application/json", "user-agent": "SignalForgeGR/1.1 (+https://signalforge-gr.onrender.com)" },
+    redirect: "error",
+    signal: AbortSignal.timeout(16000),
+  });
   if (!response.ok) throw new Error("upstream HTTP " + response.status);
+  const size = Number(response.headers.get("content-length") || "0");
+  if (size > MAX_BYTES) throw new Error("upstream response exceeds 8 MiB limit");
   const buffer = await response.arrayBuffer();
   if (buffer.byteLength > MAX_BYTES) throw new Error("upstream response exceeds 8 MiB limit");
   return JSON.parse(Buffer.from(buffer).toString("utf8"));
 }
-// Agent 1: sourced discovery, Agent 2: cautious validation, Agent 3: scoring,
-// Agent 4: evidence-backed briefing, Agent 5: autonomous SEO/RSS distribution.
+// Worker 1 fetches sourced records; worker 2 rejects obsolete/undated tenders;
+// worker 3 ranks evidence quality; worker 4 prepares a cautious briefing;
+// worker 5 publishes source-grounded pages, RSS and sitemap.
 export async function runCycle(fetcher = fetchLimited) {
-  const sources = [days(1), days(2), days(3), days(5), days(8)];
-  const outcomes = await Promise.allSettled(sources.map(async d => {
-    const url = "https://api.diavgis.gr/ocds/releases/" + d;
-    const result = await fetcher(url);
-    if (!Array.isArray(result.releases)) throw new Error("no OCDS releases array");
-    return { day: d, url, data: result.releases, partial: Boolean(result.links?.next) };
+  const dates = SCAN_DAYS.map(days);
+  const outcomes = await Promise.allSettled(dates.map(async day => {
+    let url = validatePageUrl("https://api.diavgis.gr/ocds/releases/" + day, day);
+    const seen = new Set();
+    const packages = [], visited = [], issues = [];
+    for (let page = 0; page < MAX_PAGES_PER_DAY; page++) {
+      if (seen.has(url)) { issues.push("duplicate pagination cursor"); break; }
+      seen.add(url);
+      let payload;
+      try { payload = await fetcher(url); }
+      catch (error) {
+        if (!packages.length) throw error;
+        issues.push("page " + (page + 1) + " unavailable: " + String(error?.message || error).slice(0, 95));
+        break;
+      }
+      if (!payload || !Array.isArray(payload.releases)) {
+        if (!packages.length) throw Error("OCDS package lacks releases[]");
+        issues.push("malformed later pagination page"); break;
+      }
+      visited.push(url);
+      packages.push(...payload.releases);
+      if (packages.length >= MAX_RELEASES_PER_CYCLE) { issues.push("bounded release limit"); break; }
+      const next = payload.links?.next;
+      if (!next) break;
+      try { url = validatePageUrl(next, day, url); }
+      catch (error) { issues.push(String(error.message)); break; }
+      if (page === MAX_PAGES_PER_DAY - 1) issues.push("additional pagination pages available");
+    }
+    return { day, visited, packages, issues };
   }));
-  let rows = [], errors = [], sourcesRead = [], partialCount = 0;
+  let releases = [], errors = [], sourcesRead = [], partialCount = 0;
   for (let i = 0; i < outcomes.length; i++) {
-    const o = outcomes[i];
-    if (o.status === "fulfilled") {
-      rows.push(...o.value.data);
-      sourcesRead.push(o.value.url);
-      if (o.value.partial) partialCount++;
-    } else errors.push(sources[i] + ": " + String(o.reason?.message || o.reason).slice(0, 90));
+    const outcome = outcomes[i];
+    if (outcome.status === "fulfilled") {
+      const { visited, packages, issues, day } = outcome.value;
+      if (releases.length < MAX_RELEASES_PER_CYCLE) releases.push(...packages.slice(0, MAX_RELEASES_PER_CYCLE - releases.length));
+      sourcesRead.push(...visited);
+      if (issues.length) { partialCount++; errors.push(day + ": " + issues.join("; ")); }
+    } else {
+      errors.push(dates[i] + ": " + String(outcome.reason?.message || outcome.reason).slice(0, 105));
+    }
   }
-  const items = mergeReleases(rows);
+  const candidateItems = mergeReleases(releases);
   const successful = sourcesRead.length > 0;
   runtime = {
-    ...runtime, items: successful ? items : runtime.items,
-    checkedAt: new Date().toISOString(), successAt: successful ? new Date().toISOString() : runtime.successAt,
-    errors, countRead: successful ? rows.length : runtime.countRead, releaseCount: rows.length,
-    candidates: successful ? items.length : runtime.candidates, lastSources: sourcesRead,
-    partialCount, cycles: runtime.cycles + 1, status: successful ? "ready" : "source_unavailable",
+    ...runtime, items: successful ? candidateItems : runtime.items,
+    checkedAt: new Date().toISOString(),
+    successAt: successful ? new Date().toISOString() : runtime.successAt,
+    errors, countRead: successful ? releases.length : runtime.countRead,
+    releaseCount: releases.length, candidates: successful ? candidateItems.length : runtime.candidates,
+    lastSources: sourcesRead, partialCount, cycles: runtime.cycles + 1,
+    status: successful && !errors.length ? "ready" : successful ? "partial" : "source_unavailable",
   };
-  console.log(JSON.stringify({agentCycle:runtime.cycles,status:runtime.status,sources:sourcesRead.length,releases:rows.length,candidates:items.length,errors}));
+  console.log(JSON.stringify({
+    agentCycle: runtime.cycles, status: runtime.status, sourcePages: sourcesRead.length,
+    releases: releases.length, candidates: candidateItems.length,
+    partialDays: partialCount, errors,
+  }));
   return runtime;
 }
 function triggerCycle() {
